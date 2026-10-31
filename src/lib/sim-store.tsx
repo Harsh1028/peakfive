@@ -37,6 +37,8 @@ import {
   type OptimizeResponse,
   type PeakfiveEvent,
   type CompareResponse,
+  type OptimizeRequest,
+  validateRequest,
 } from "./peakfive-api";
 
 export type DataSource = "IESO" | "UPLOAD" | "ILLUSTRATIVE";
@@ -85,6 +87,7 @@ interface Store {
   setSystem: (system: System) => void;
   events: PeakfiveEvent[];
   setEvents: (events: PeakfiveEvent[]) => void;
+  restoreRequest: (request: OptimizeRequest) => void;
   backendResult: OptimizeResponse | null;
   comparison: CompareResponse | null;
   comparisonBaseline: Plan | null;
@@ -541,6 +544,14 @@ export function SimProvider({
     setSystem,
     events,
     setEvents,
+    restoreRequest: (input) => {
+      const request = validateRequest(input);
+      setDate(request.date);
+      setSystemState(request.system);
+      setEventsState(request.events);
+      setPeakWindow({ peakStart: request.peak_window.start_slot / 4, peakEnd: request.peak_window.end_slot / 4 });
+      resetOpt();
+    },
     backendResult,
     comparison,
     comparisonBaseline,
