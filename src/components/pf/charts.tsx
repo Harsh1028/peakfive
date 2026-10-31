@@ -106,7 +106,7 @@ export function DemandChart({ height = 300 }: { height?: number }) {
 }
 
 export function StorageChart({ height = 220 }: { height?: number }) {
-  const { baseline, opt, config, step, mode, capacity, hasSchedule } = useSim();
+  const { baseline, opt, config, step, mode, capacity, hasSchedule, comparisonBaseline } = useSim();
   if (!hasSchedule)
     return (
       <div
@@ -119,7 +119,7 @@ export function StorageChart({ height = 220 }: { height?: number }) {
   const o = opt?.feasible ? opt.plan?.eval : undefined;
   const data = (mode === "backend" && o ? o : baseline.eval).levels.map((v, t) => ({
     t,
-    base: mode === "demo" ? v : undefined,
+    base: mode === "demo" || comparisonBaseline ? baseline.eval.levels[t] : undefined,
     opt: o?.levels[t],
   }));
   return (
@@ -157,7 +157,7 @@ export function StorageChart({ height = 220 }: { height?: number }) {
           />
         )}
         <ReferenceLine x={step} stroke="var(--foreground)" />
-        {mode === "demo" && (
+        {(mode === "demo" || comparisonBaseline) && (
           <Line
             dataKey="base"
             stroke="var(--muted-foreground)"
@@ -269,7 +269,7 @@ export function PeakCompareChart({
 }
 
 export function LoadChart({ height = 200 }: { height?: number }) {
-  const { baseline, opt, config, mode, hasSchedule } = useSim();
+  const { baseline, opt, config, mode, hasSchedule, comparisonBaseline } = useSim();
   if (!hasSchedule)
     return (
       <div
@@ -282,7 +282,7 @@ export function LoadChart({ height = 200 }: { height?: number }) {
   const o = opt?.feasible ? opt.plan?.eval : undefined;
   const data = (mode === "backend" && o ? o : baseline.eval).kw.map((k, t) => ({
     t,
-    base: mode === "demo" ? k : undefined,
+    base: mode === "demo" || comparisonBaseline ? baseline.eval.kw[t] : undefined,
     opt: o?.kw[t],
   }));
   return (
@@ -309,7 +309,7 @@ export function LoadChart({ height = 200 }: { height?: number }) {
           fill="var(--destructive)"
           fillOpacity={0.12}
         />
-        {mode === "demo" && (
+        {(mode === "demo" || comparisonBaseline) && (
           <Area
             type="stepAfter"
             dataKey="base"
@@ -330,9 +330,9 @@ export function LoadChart({ height = 200 }: { height?: number }) {
         <Legend
           formatter={(v) =>
             v === "base"
-              ? "Baseline pump load (kW)"
+              ? mode === "backend" ? "Simulated baseline site load (kW)" : "Baseline pump load (kW)"
               : mode === "backend"
-                ? "Backend facility load (kW)"
+                ? "Simulated optimized site load (kW)"
                 : "Optimized pump load (kW)"
           }
           wrapperStyle={{ fontSize: 11 }}

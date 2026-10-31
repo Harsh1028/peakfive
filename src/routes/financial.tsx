@@ -129,7 +129,7 @@ function Financial() {
       {mode === "backend" ? (
         <Panel
           title="B · Backend peak demand"
-          sub="No financial savings estimate: the backend provides no independent baseline or tariff."
+          sub="Simulated optimized demand only. A modelled comparison does not establish verified tariffs or financial savings."
         >
           <div className="num text-2xl">
             {backendResult?.coincident_kw_after?.toFixed(1) ?? "—"} kW

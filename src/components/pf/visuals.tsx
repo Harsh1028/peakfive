@@ -138,7 +138,7 @@ function Stat({ label, value, tone }: { label: string; value: string; tone?: str
 }
 
 export function PumpStation() {
-  const { active, step, config, pumps, hasSchedule, mode, backendResult, events } = useSim();
+  const { active, step, pumps, hasSchedule, mode, activeSchedule, events } = useSim();
   const c = active.combos[step];
   return (
     <div className="grid gap-3">
@@ -146,7 +146,7 @@ export function PumpStation() {
         const on =
           hasSchedule &&
           (mode === "backend"
-            ? !!backendResult?.schedule[step]?.pumps_on.includes(p.id)
+            ? !!activeSchedule?.[step]?.pumps_on.includes(p.id)
             : !!(c & (1 << i)));
         const avail =
           p.available &&
