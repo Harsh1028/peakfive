@@ -10,19 +10,26 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as BusinessRouteImport } from './routes/business'
 import { Route as CarbonRouteImport } from './routes/carbon'
+import { Route as DemoRouteImport } from './routes/demo'
 import { Route as FinancialRouteImport } from './routes/financial'
 import { Route as GridRouteImport } from './routes/grid'
 import { Route as HamiltonRouteImport } from './routes/hamilton'
 import { Route as MethodologyRouteImport } from './routes/methodology'
 import { Route as OptimizerRouteImport } from './routes/optimizer'
-import { Route as ScenariosRouteImport } from './routes/scenarios'
+import { Route as SimulatorRouteImport } from './routes/simulator'
 import { Route as TwinRouteImport } from './routes/twin'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BusinessRoute = BusinessRouteImport.update({
@@ -33,6 +40,11 @@ const BusinessRoute = BusinessRouteImport.update({
 const CarbonRoute = CarbonRouteImport.update({
   id: '/carbon',
   path: '/carbon',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DemoRoute = DemoRouteImport.update({
+  id: '/demo',
+  path: '/demo',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FinancialRoute = FinancialRouteImport.update({
@@ -60,9 +72,9 @@ const OptimizerRoute = OptimizerRouteImport.update({
   path: '/optimizer',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ScenariosRoute = ScenariosRouteImport.update({
-  id: '/scenarios',
-  path: '/scenarios',
+const SimulatorRoute = SimulatorRouteImport.update({
+  id: '/simulator',
+  path: '/simulator',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TwinRoute = TwinRouteImport.update({
@@ -70,43 +82,55 @@ const TwinRoute = TwinRouteImport.update({
   path: '/twin',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/business': typeof BusinessRoute
   '/carbon': typeof CarbonRoute
+  '/demo': typeof DemoRoute
   '/financial': typeof FinancialRoute
   '/grid': typeof GridRoute
   '/hamilton': typeof HamiltonRoute
   '/methodology': typeof MethodologyRoute
   '/optimizer': typeof OptimizerRoute
-  '/scenarios': typeof ScenariosRoute
+  '/simulator': typeof SimulatorRoute
   '/twin': typeof TwinRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/business': typeof BusinessRoute
   '/carbon': typeof CarbonRoute
+  '/demo': typeof DemoRoute
   '/financial': typeof FinancialRoute
   '/grid': typeof GridRoute
   '/hamilton': typeof HamiltonRoute
   '/methodology': typeof MethodologyRoute
   '/optimizer': typeof OptimizerRoute
-  '/scenarios': typeof ScenariosRoute
+  '/simulator': typeof SimulatorRoute
   '/twin': typeof TwinRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/business': typeof BusinessRoute
   '/carbon': typeof CarbonRoute
+  '/demo': typeof DemoRoute
   '/financial': typeof FinancialRoute
   '/grid': typeof GridRoute
   '/hamilton': typeof HamiltonRoute
   '/methodology': typeof MethodologyRoute
   '/optimizer': typeof OptimizerRoute
-  '/scenarios': typeof ScenariosRoute
+  '/simulator': typeof SimulatorRoute
   '/twin': typeof TwinRoute
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -114,49 +138,58 @@ export interface FileRouteTypes {
     | '/'
     | '/business'
     | '/carbon'
+    | '/demo'
     | '/financial'
     | '/grid'
     | '/hamilton'
     | '/methodology'
     | '/optimizer'
-    | '/scenarios'
+    | '/simulator'
     | '/twin'
+    | '/dashboard'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/business'
     | '/carbon'
+    | '/demo'
     | '/financial'
     | '/grid'
     | '/hamilton'
     | '/methodology'
     | '/optimizer'
-    | '/scenarios'
+    | '/simulator'
     | '/twin'
+    | '/dashboard'
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
     | '/business'
     | '/carbon'
+    | '/demo'
     | '/financial'
     | '/grid'
     | '/hamilton'
     | '/methodology'
     | '/optimizer'
-    | '/scenarios'
+    | '/simulator'
     | '/twin'
+    | '/_authenticated/dashboard'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   BusinessRoute: typeof BusinessRoute
   CarbonRoute: typeof CarbonRoute
+  DemoRoute: typeof DemoRoute
   FinancialRoute: typeof FinancialRoute
   GridRoute: typeof GridRoute
   HamiltonRoute: typeof HamiltonRoute
   MethodologyRoute: typeof MethodologyRoute
   OptimizerRoute: typeof OptimizerRoute
-  ScenariosRoute: typeof ScenariosRoute
+  SimulatorRoute: typeof SimulatorRoute
   TwinRoute: typeof TwinRoute
 }
 
@@ -167,6 +200,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/business': {
@@ -181,6 +221,13 @@ declare module '@tanstack/react-router' {
       path: '/carbon'
       fullPath: '/carbon'
       preLoaderRoute: typeof CarbonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/demo': {
+      id: '/demo'
+      path: '/demo'
+      fullPath: '/demo'
+      preLoaderRoute: typeof DemoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/financial': {
@@ -218,11 +265,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OptimizerRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/scenarios': {
-      id: '/scenarios'
-      path: '/scenarios'
-      fullPath: '/scenarios'
-      preLoaderRoute: typeof ScenariosRouteImport
+    '/simulator': {
+      id: '/simulator'
+      path: '/simulator'
+      fullPath: '/simulator'
+      preLoaderRoute: typeof SimulatorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/twin': {
@@ -232,19 +279,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TwinRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   BusinessRoute: BusinessRoute,
   CarbonRoute: CarbonRoute,
+  DemoRoute: DemoRoute,
   FinancialRoute: FinancialRoute,
   GridRoute: GridRoute,
   HamiltonRoute: HamiltonRoute,
   MethodologyRoute: MethodologyRoute,
   OptimizerRoute: OptimizerRoute,
-  ScenariosRoute: ScenariosRoute,
+  SimulatorRoute: SimulatorRoute,
   TwinRoute: TwinRoute,
 }
 export const routeTree = rootRouteImport
