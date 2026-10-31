@@ -37,7 +37,7 @@ export function IllustrativeBanner() {
     <div className="mb-4 flex items-center gap-2 rounded-lg border border-warning/40 bg-warning/10 px-4 py-2.5 text-sm text-warning">
       <AlertTriangle className="h-4 w-4 shrink-0" />
       {mode === "backend"
-        ? "Illustrative water system — not real utility data. Backend schedules are separate from IESO grid demand."
+        ? "This prototype uses simulated municipal water infrastructure. Pump schedules are calculated by our optimization engine, while Ontario electricity-demand data is displayed separately using verified IESO data when available."
         : "Illustrative grid profile. Import official IESO data for historical analysis."}
     </div>
   );
