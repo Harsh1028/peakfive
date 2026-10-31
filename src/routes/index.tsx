@@ -16,6 +16,7 @@ import {
 } from "@/components/pf/panels";
 import { Btn, Panel } from "@/components/pf/ui";
 import { PumpStation, Tank } from "@/components/pf/visuals";
+import { EnvironmentalSummary, CarbonPresentation } from "@/components/pf/carbon";
 
 export const Route = createFileRoute("/")({
   head: () =>
@@ -52,6 +53,7 @@ function Overview() {
       <BackendSettings />
       <InfeasiblePanel />
       <KpiCards />
+      <EnvironmentalSummary />
       <Playback />
       <div className="grid gap-5 xl:grid-cols-5">
         <Panel
@@ -85,7 +87,7 @@ function Overview() {
       </div>
       {demo && (
         <SimProvider initialMode="demo">
-          <DemoMode onClose={() => setDemo(false)} />
+          <DemoMode sustainability={<CarbonPresentation />} onClose={() => setDemo(false)} />
         </SimProvider>
       )}
     </div>

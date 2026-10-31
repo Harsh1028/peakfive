@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { ChevronLeft, ChevronRight, RotateCcw, X } from "lucide-react";
 import { DEFAULT_CONFIG } from "@/lib/engine";
 import { useSim } from "@/lib/sim-store";
@@ -21,9 +21,10 @@ const STAGES = [
   "PEAKFIVE Optimization",
   "The Results",
   "Challenge PEAKFIVE",
+  "Beyond Electricity Costs",
 ];
 
-export function DemoMode({ onClose }: { onClose: () => void }) {
+export function DemoMode({ onClose, sustainability }: { onClose: () => void; sustainability?: ReactNode }) {
   const [i, setI] = useState(0);
   const s = useSim();
   const restart = () => {
@@ -65,11 +66,12 @@ export function DemoMode({ onClose }: { onClose: () => void }) {
           </div>
         </div>
 
-        <p className="mb-2 text-sm text-warning">
+        {i !== 5 && <p className="mb-2 text-sm text-warning">
           Frontend-only demo simulation — not backend results
-        </p>
-        <h2 className="text-3xl font-semibold">{STAGES[i]}</h2>
+        </p>}
+        {i !== 5 && <h2 className="text-3xl font-semibold">{STAGES[i]}</h2>}
         <div className="mt-6 space-y-5">
+          {i === 5 && sustainability}
           {i === 0 && (
             <>
               <p className="max-w-3xl text-muted-foreground">
@@ -192,7 +194,7 @@ export function DemoMode({ onClose }: { onClose: () => void }) {
             <ChevronLeft className="h-4 w-4" />
             Back
           </Btn>
-          {i < 4 ? (
+          {i < 5 ? (
             <Btn variant="primary" onClick={() => setI(i + 1)}>
               Next
               <ChevronRight className="h-4 w-4" />

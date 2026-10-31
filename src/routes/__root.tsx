@@ -14,6 +14,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SimProvider } from "../lib/sim-store";
 import { AppShell } from "../components/pf/shell";
+import { CarbonProvider } from "../lib/carbon-store";
 
 function NotFoundComponent() {
   return (
@@ -124,9 +125,11 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <SimProvider>
+        <CarbonProvider>
         <AppShell>
           <Outlet />
         </AppShell>
+        </CarbonProvider>
       </SimProvider>
     </QueryClientProvider>
   );
