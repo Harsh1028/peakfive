@@ -14,7 +14,7 @@ export const Route = createFileRoute("/financial")({
 const cad = (n: number) => n.toLocaleString("en-CA", { style: "currency", currency: "CAD", maximumFractionDigits: 0 });
 
 function Financial() {
-  const { baseline, opt } = useSim();
+  const { baseline, opt, config } = useSim();
   const [spend, setSpend] = useState(500000);
   const [rate, setRate] = useState(8);
   const [sub, setSub] = useState(15000);
@@ -24,9 +24,7 @@ function Financial() {
   const [onPeak, setOnPeak] = useState<string>("");
   const o = opt?.feasible ? opt.plan : undefined;
   const tariffOk = offPeak !== "" && onPeak !== "" && Number(offPeak) >= 0 && Number(onPeak) >= 0;
-  const cost = (kw: number[], cfg = useSim) => kw.reduce((a, k, t) => a + k * DT_H * (inPeakCfg(t) ? Number(onPeak) : Number(offPeak)), 0);
-  const { config } = useSim();
-  function inPeakCfg(t: number) { return inPeak(t, config); }
+  const cost = (kw: number[]) => kw.reduce((a, k, t) => a + k * DT_H * (inPeak(t, config) ? Number(onPeak) : Number(offPeak)), 0);
 
   const [peakDemandBase, setPDB] = useState(0);
   const [peakDemandOpt, setPDO] = useState(0);
