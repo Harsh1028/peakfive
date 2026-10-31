@@ -65,7 +65,7 @@ function Home() {
         />
         <div className="site-inner relative z-10 w-full px-6">
           <Tag tone="ok">Intelligent infrastructure optimization</Tag>
-          <h1 className="mt-6 max-w-3xl text-5xl font-semibold leading-tight md:text-7xl">
+          <h1 className="mt-6 max-w-3xl text-4xl font-semibold leading-tight sm:text-5xl md:text-7xl">
             Smarter Water.
             <br />
             <span className="text-primary">Smarter Energy.</span>

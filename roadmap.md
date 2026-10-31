@@ -1,12 +1,15 @@
 # PEAKFIVE backend integration
 
 ## SaaS transformation
-- [ ] Plan public homepage, real accounts, private dashboard and saved scenarios while preserving public live optimization.
-- [ ] Add public navigation, homepage/content/legal draft pages and unrestricted /demo.
-- [ ] Configure verified signup, login, recovery, session handling and private account settings.
-- [ ] Add owner-protected profiles and saved scenario storage, reopen/rerun/duplicate/delete.
-- [ ] Resolve safe deletion and public rate-limit boundaries without claiming login protects Render.
-- [ ] Run security checks and individually verify account flows, ownership isolation and unchanged live optimization/carbon; report unverified published checks separately.
+- [x] Plan public homepage, real accounts, private dashboard and saved scenarios while preserving public live optimization.
+- [x] Add public navigation, homepage/content/legal draft pages and unrestricted /demo.
+- [x] Configure verified signup, login, recovery, session handling and private account settings; provider return origins inspected for production and preview.
+- [x] Add owner-protected profiles and saved scenario storage, reopen/rerun/duplicate/delete; two-account live RLS checks passed and test accounts removed.
+- [x] Add confirmed private deletion requests and retain current Render limits as selected; no claim login protects direct Render access.
+- [x] Run basic security checks and database linter (no findings), 112 regression tests, real verified-QA login/refresh/logout, profile editing, guest optimization/comparison and genuine Climatiq reporting.
+- [ ] Complete signup verification, recovery/email-change delivery and social-provider round trips — needs a real reachable email/provider interaction; reserved QA email domains are rejected, and verification remains enabled.
+- [ ] Verify latest published site — waits for explicit publication authorization; no release performed.
+- [ ] Replace team/contact/legal placeholders and define deletion-request handling — waits for supplied team details, contact channel, legal review and retention/operational policy.
 
 ## Deployed baseline comparison
 - [x] Inspect deployed /openapi.json and real /compare responses; explain and obtain approval for the integration plan before code changes.
