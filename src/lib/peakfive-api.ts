@@ -106,7 +106,7 @@ const responseSchema = z.object({
   explanation: z.string(),
 });
 export type OptimizeResponse = z.infer<typeof responseSchema>;
-export const REQUEST_TIMEOUT_MS = 45_000;
+export const REQUEST_TIMEOUT_MS = 180_000;
 export const configuredApiUrl = () =>
   (import.meta.env["VITE_PEAKFIVE_API"] as string | undefined)?.trim() ?? "";
 export function normalizeApiUrl(value: string) {
@@ -145,7 +145,7 @@ async function callApi(base: string, path: string, init?: RequestInit) {
   } catch (e) {
     if (controller.signal.aborted)
       throw new Error(
-        "Backend request timed out after 45 seconds. Feasibility remains unknown; retry the scenario.",
+        "Backend request timed out after 180 seconds. Render may still be waking up; no result has been substituted. Retry the scenario.",
       );
     if (e instanceof TypeError)
       throw new Error(
@@ -182,6 +182,123 @@ export async function optimizeRemote(base: string, input: OptimizeRequest) {
     parsed.data.explanation = `${parsed.data.explanation} Retry after ${response.headers.get("Retry-After") ?? "5"} seconds.`;
   return parsed.data;
 }
+
+const comparisonMetricsSchema = z.object({
+  peak_window_kw: finite.nullable(),
+  pump_energy_kwh: finite,
+  site_energy_kwh: finite,
+  min_tank_m3: finite,
+  end_of_day_m3: finite,
+  initial_m3: finite,
+  pump_starts: z.record(z.number().int().nonnegative()),
+  pump_slots_on: z.record(z.number().int().nonnegative()),
+});
+const comparisonScheduleSchema = z.object({
+  valid: z.boolean(),
+  violations: z.array(z.string()),
+  metrics: comparisonMetricsSchema.nullable(),
+  schedule: responseSchema.shape.schedule.optional(),
+});
+export const comparisonResponseSchema = z.object({
+  status: z.enum(["comparison_available", "comparison_unavailable", "invalid_input", "error"]),
+  label: z.string(),
+  explanation: z.string(),
+  peak_window: z.object({
+    unit: z.literal("kW"),
+    baseline_kw: finite,
+    optimized_kw: finite,
+    reduction_kw: z.number().finite(),
+    reduction_pct: z.number().finite().nullable(),
+  }).nullable(),
+  energy: z.object({
+    unit: z.literal("kWh"),
+    baseline_pump_kwh: finite,
+    optimized_pump_kwh: finite,
+    optimized_minus_baseline_kwh: z.number().finite(),
+    optimized_minus_baseline_end_of_day_m3: z.number().finite(),
+    note: z.string(),
+  }).nullable(),
+  baseline: comparisonScheduleSchema.extend({ label: z.string(), applicable: z.boolean() }).nullable(),
+  optimized: comparisonScheduleSchema.extend({
+    status: responseSchema.shape.status,
+    explanation: z.string(),
+  }).nullable(),
+  caveats: z.array(z.string()),
+});
+export type CompareResponse = z.infer<typeof comparisonResponseSchema>;
+export function comparisonRequest(input: OptimizeRequest) {
+  const request = validateRequest(input);
+  const time = (slot: number) =>
+    `${String(Math.floor(slot / 4)).padStart(2, "0")}:${String((slot % 4) * 15).padStart(2, "0")}`;
+  return { ...request, peak_window: [time(request.peak_window.start_slot), time(request.peak_window.end_slot)] };
+}
+export async function compareRemote(base: string, input: OptimizeRequest) {
+  const { response, body } = await callApi(base, "/compare", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(comparisonRequest(input)),
+  });
+  const parsed = comparisonResponseSchema.safeParse(body);
+  if (!parsed.success) {
+    if (response.status === 422 || response.status === 413)
+      throw new Error("Backend rejected the comparison inputs. Check the scenario; no comparison is displayed.");
+    throw new Error("Backend returned an invalid comparison response; no results have been substituted.");
+  }
+  if (!response.ok && ["comparison_available", "comparison_unavailable"].includes(parsed.data.status))
+    throw new Error("Backend returned an inconsistent comparison HTTP status.");
+  if (response.status === 503)
+    parsed.data.explanation += ` Retry after ${response.headers.get("Retry-After") ?? "5"} seconds.`;
+  return parsed.data;
+}
+export function comparisonToPlans(result: CompareResponse, request: OptimizeRequest) {
+  if (result.status !== "comparison_available") {
+    if (result.peak_window !== null || result.energy !== null)
+      throw new Error("Unavailable comparison contains unsupported reduction figures.");
+    return null;
+  }
+  const { baseline, optimized, peak_window: peak, energy } = result;
+  if (!baseline?.applicable || !baseline.valid || !optimized?.valid ||
+      baseline.violations.length || optimized.violations.length ||
+      !baseline.schedule || !optimized.schedule || !peak || !energy ||
+      !baseline.metrics || !optimized.metrics ||
+      !["optimal", "feasible_timeout"].includes(optimized.status))
+    throw new Error("Backend comparison is incomplete or unvalidated; no comparison displayed.");
+  const optimizedResult: OptimizeResponse = {
+    status: optimized.status,
+    explanation: optimized.explanation,
+    schedule: optimized.schedule,
+    coincident_kw_before: null,
+    coincident_kw_after: peak.optimized_kw,
+  };
+  const baselinePlan = scheduleToPlan({
+    ...optimizedResult, status: "optimal", schedule: baseline.schedule,
+    coincident_kw_after: peak.baseline_kw,
+  }, request);
+  const optimizedPlan = scheduleToPlan(optimizedResult, request);
+  const close = (a: number, b: number) => Math.abs(a - b) < 0.01;
+  const pumpEnergy = (plan: typeof baselinePlan) => plan.eval.dailyKwh - request.system.base_load_kw * 24;
+  for (const [metrics, plan, kw] of [
+    [baseline.metrics, baselinePlan, peak.baseline_kw],
+    [optimized.metrics, optimizedPlan, peak.optimized_kw],
+  ] as const) {
+    if (metrics.peak_window_kw === null || !close(metrics.peak_window_kw, kw) ||
+        !close(metrics.pump_energy_kwh, pumpEnergy(plan)) ||
+        !close(metrics.site_energy_kwh, plan.eval.dailyKwh) ||
+        !close(metrics.min_tank_m3, Math.min(...plan.eval.levels)) ||
+        !close(metrics.initial_m3, request.system.tank.initial_m3) ||
+        !close(metrics.end_of_day_m3, plan.eval.finalLevel))
+      throw new Error("Backend comparison metrics do not match its schedules.");
+  }
+  if (!close(peak.reduction_kw, peak.baseline_kw - peak.optimized_kw) ||
+      (peak.baseline_kw === 0 ? peak.reduction_pct !== null :
+        peak.reduction_pct === null || !close(peak.reduction_pct, peak.reduction_kw / peak.baseline_kw * 100)) ||
+      !close(energy.baseline_pump_kwh, pumpEnergy(baselinePlan)) ||
+      !close(energy.optimized_pump_kwh, pumpEnergy(optimizedPlan)) ||
+      !close(energy.optimized_minus_baseline_kwh, energy.optimized_pump_kwh - energy.baseline_pump_kwh) ||
+      !close(energy.optimized_minus_baseline_end_of_day_m3, optimizedPlan.eval.finalLevel - baselinePlan.eval.finalLevel))
+    throw new Error("Backend comparison reduction or energy metrics are inconsistent.");
+  return { baseline: baselinePlan, optimized: optimizedPlan, optimizedResult };
+}
 export const peakContains = (t: number, start: number, end: number) =>
   start === end ? false : start < end ? t >= start && t < end : t >= start || t < end;
 export function demandWithEvents(request: OptimizeRequest) {
@@ -211,6 +328,8 @@ export function scheduleToPlan(
   const { pumps, tank, base_load_kw } = request.system;
   const demand = demandWithEvents(request);
   const rows = result.schedule;
+  if (rows.some((r) => new Set(r.pumps_on).size !== r.pumps_on.length))
+    throw new Error("Backend schedule contains duplicate pump IDs.");
   const pumped = rows.map((r) =>
     r.pumps_on.reduce((sum, id) => {
       const p = pumps.find((p) => p.id === id);

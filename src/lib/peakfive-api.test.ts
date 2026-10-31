@@ -190,7 +190,7 @@ describe("FastAPI contract", () => {
       "invalid_input",
     );
   });
-  it("aborts at exactly 45 seconds without a simulated fallback", async () => {
+  it("allows Render cold starts and aborts at 180 seconds without a simulated fallback", async () => {
     vi.useFakeTimers();
     vi.stubGlobal(
       "fetch",
@@ -201,11 +201,11 @@ describe("FastAPI contract", () => {
           ),
       ),
     );
-    expect(REQUEST_TIMEOUT_MS).toBe(45000);
+    expect(REQUEST_TIMEOUT_MS).toBe(180000);
     const pending = expect(optimizeRemote("https://api.example.com", request())).rejects.toThrow(
-      /45 seconds/,
+      /180 seconds/,
     );
-    await vi.advanceTimersByTimeAsync(45000);
+    await vi.advanceTimersByTimeAsync(180000);
     await pending;
   });
 });
