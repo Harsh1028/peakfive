@@ -1,5 +1,12 @@
 # PEAKFIVE backend integration
 
+## Verified Hamilton water data
+- [ ] Verify Table 2-3 and documented infrastructure against the official 2025 report.
+- [ ] Add measured-data dashboard and explicit verified-data / engineering-simulation viewing modes.
+- [ ] Add provenance-documented operational import with interval, timezone, unit and duplicate validation, isolated from optimization.
+- [ ] Update guided demonstration to six stages with real production evidence and simulated-schedule emissions.
+- [ ] Test exact published values, import rules, live optimization and full presentation flow.
+
 ## Hamilton municipal case study
 - [x] Add historical infrastructure context, transparency labels and connected scenario entry points; Woodward capacity verified.
 - [x] Add a five-stage actual-backend Hamilton demonstration and retain operational scenario controls.
