@@ -11,7 +11,8 @@
 - [ ] Verify optimization end-to-end against the real backend (blocked by missing deployed backend URL).
 
 ## Carbon Intelligence
-- [ ] Configure secure Climatiq access and verify its electricity contract.
-- [ ] Add schedule-linked carbon accounting, exact-input caching and failure handling.
-- [ ] Add Carbon Intelligence, overview summary and optional presentation stage.
-- [ ] Test accounting rules, existing features and live Climatiq response.
+- [x] Configure secure Climatiq access and verify its electricity contract with a real CA-ON response (2024 Government of Canada factor).
+- [x] Add schedule-linked carbon accounting, exact-input caching and failure handling.
+- [x] Add Carbon Intelligence, overview summary and optional presentation stage.
+- [x] Test accounting rules (53 tests passing), live Climatiq UI calculations, scenario changes and presentation isolation using an explicit validated scheduling fixture.
+- [ ] Verify carbon reporting after a real deployed FastAPI solve (blocked by missing deployed scheduling backend URL).

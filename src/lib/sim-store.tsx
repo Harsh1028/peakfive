@@ -535,3 +535,13 @@ export function useSim() {
   if (!s) throw new Error("useSim outside SimProvider");
   return s;
 }
+
+export function SimSnapshot({
+  value,
+  children,
+}: {
+  value: ReturnType<typeof useSim>;
+  children: ReactNode;
+}) {
+  return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
+}
