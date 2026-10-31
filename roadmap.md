@@ -1,5 +1,11 @@
 # PEAKFIVE backend integration
 
+## Deployed baseline comparison
+- [ ] Inspect deployed /openapi.json and real /compare responses; explain the integration plan before code changes.
+- [ ] Add exact documented comparison requests, response validation and cold-start loading/timeout handling.
+- [ ] Connect simulated baseline/optimized schedules and API peak metrics to existing dashboards, playback and charts without altering Climatiq or inventing savings.
+- [ ] Test response statuses, missing/invalid data, stale scenario results and live browser comparison flow.
+
 ## Verified Hamilton water data
 - [x] Verify all 36 Table 2-3 production values and Woodward infrastructure (section 2.2.1, page 8) against the official 2025 report; disclose capacity-label differences and unstated publication date.
 - [x] Add measured-data dashboard and explicit verified-data / engineering-simulation viewing modes.
