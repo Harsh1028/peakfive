@@ -1,5 +1,11 @@
 # PEAKFIVE backend integration
 
+## Hamilton municipal case study
+- [ ] Add official historical infrastructure context, transparency labels and connected scenario entry points.
+- [ ] Add a five-stage actual-backend Hamilton demonstration and retain operational scenario controls.
+- [ ] Add prospective pilot requirements and carbon context without inventing savings or affiliation.
+- [ ] Verify sources, defaults, live workflow, playback, scenarios and carbon reporting.
+
 - [x] Inspect the existing interface and identify integration dependencies.
 - [x] Obtain authoritative frontend_handoff.md.
 - [x] Obtain Render production URL https://peakfive-api.onrender.com; verify production-origin CORS.
