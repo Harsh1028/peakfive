@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useSim } from "@/lib/sim-store";
 import { BackendScenarios } from "./backend-controls";
@@ -14,12 +14,11 @@ const STAGES = ["Hamilton's Challenge", "Our Simulated System", "Intelligent Sch
 export function HamiltonDemo({ onClose }: { onClose: () => void }) {
   const [stage, setStage] = useState(0);
   const s = useSim();
-  const exitRef = useRef<HTMLButtonElement>(null);
   useEffect(() => {
     const previous = document.activeElement;
     const overflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    exitRef.current?.focus();
+    document.getElementById("hamilton-demo-exit")?.focus();
     const key = (event: KeyboardEvent) => {
       if (event.key === "Escape") onClose();
       if (event.key !== "Tab") return;
@@ -38,7 +37,7 @@ export function HamiltonDemo({ onClose }: { onClose: () => void }) {
   return (
     <div id="hamilton-demo" role="dialog" aria-modal="true" aria-labelledby="hamilton-demo-title" className="fixed inset-0 z-50 overflow-y-auto bg-background">
       <div className="mx-auto max-w-6xl space-y-5 px-4 py-6 md:px-8">
-        <header className="flex flex-wrap items-center justify-between gap-3"><div><p className="text-xs text-primary">Hamilton, Ontario · Illustrative case study</p><h2 id="hamilton-demo-title" className="mt-1 text-2xl font-semibold">PEAKFIVE: Hamilton Case Study</h2></div><Btn ref={exitRef} size="sm" onClick={onClose}><X className="h-4 w-4" />Exit Demo</Btn></header>
+        <header className="flex flex-wrap items-center justify-between gap-3"><div><p className="text-xs text-primary">Hamilton, Ontario · Illustrative case study</p><h2 id="hamilton-demo-title" className="mt-1 text-2xl font-semibold">PEAKFIVE: Hamilton Case Study</h2></div><Btn id="hamilton-demo-exit" size="sm" onClick={onClose}><X className="h-4 w-4" />Exit Demo</Btn></header>
         <nav aria-label="Demonstration stages" className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-5">{STAGES.map((name, i) => <Btn key={name} variant={i === stage ? "active" : "ghost"} aria-current={i === stage ? "step" : undefined} onClick={() => setStage(i)} className="h-auto min-h-10 justify-start whitespace-normal py-2 text-left text-xs"><span className="num text-primary">{i + 1}</span>{name}</Btn>)}</nav>
         <div className="flex flex-wrap items-center gap-3"><h3 className="text-xl font-semibold">{STAGES[stage]}</h3><Tag tone="warn">Synthetic water system · actual Python calculations</Tag></div>
         {stage === 0 && <><p className="max-w-3xl text-sm text-muted-foreground">Municipal utilities serve water requirements across extensive networks. Storage can offer flexibility in when pumping electricity is consumed; potential benefits depend on actual operating constraints and verified tariffs.</p><HamiltonFacts /><Panel title="Ontario electricity-demand context" sub="Verified IESO measurements when available; otherwise explicitly illustrative."><DemandChart height={240} /></Panel></>}
