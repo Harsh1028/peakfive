@@ -58,8 +58,8 @@ describe("engine", () => {
     expect(e2.peakKwh).toBeLessThan(evaluate(baselineSchedule(c2), c2, H).peakKwh);
   });
   it("11. energy figures match the pump states", () => {
-    const daily = res.combos!.reduce((a, c) => a + comboKw(c) * 0.25, 0);
-    const peak = res.combos!.reduce((a, c, t) => a + (inPeak(t, cfg) ? comboKw(c) * 0.25 : 0), 0);
+    const daily = res.combos!.reduce((a: number, c) => a + comboKw(c) * 0.25, 0);
+    const peak = res.combos!.reduce((a: number, c, t) => a + (inPeak(t, cfg) ? comboKw(c) * 0.25 : 0), 0);
     expect(optEval.dailyKwh).toBeCloseTo(daily);
     expect(optEval.peakKwh).toBeCloseTo(peak);
   });
