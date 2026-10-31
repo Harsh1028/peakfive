@@ -1,0 +1,21 @@
+# Render Blueprint for the PEAKFIVE API. See docs/deploy_render.md.
+services:
+  - type: web
+    name: peakfive-api
+    runtime: python
+    plan: free
+    # Python version comes from .python-version.
+    buildCommand: pip install -r requirements.txt
+    # Render injects PORT (default 10000); bind on all interfaces.
+    # One worker: the solve concurrency limit is per process.
+    startCommand: uvicorn api.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    autoDeploy: false
+    envVars:
+      # Prompted for in the dashboard when the Blueprint is created.
+      - key: PEAKFIVE_CORS_ORIGINS
+        sync: false
+      - key: PEAKFIVE_CORS_ORIGIN_REGEX
+        sync: false
+      - key: PEAKFIVE_MAX_CONCURRENT_SOLVES
+        value: "2"
