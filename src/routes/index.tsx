@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { SimProvider } from "@/lib/sim-store";
+import { SimProvider, SimSnapshot, useSim } from "@/lib/sim-store";
 import { BackendSettings } from "@/components/pf/backend-controls";
 import { Presentation } from "lucide-react";
 import { seo } from "@/lib/seo";
@@ -29,6 +29,7 @@ export const Route = createFileRoute("/")({
 
 function Overview() {
   const [demo, setDemo] = useState(false);
+  const actual = useSim();
   return (
     <div className="space-y-5">
       <div className="flex flex-wrap items-end justify-between gap-4">
@@ -87,7 +88,7 @@ function Overview() {
       </div>
       {demo && (
         <SimProvider initialMode="demo">
-          <DemoMode sustainability={<CarbonPresentation />} onClose={() => setDemo(false)} />
+          <DemoMode sustainability={<SimSnapshot value={actual}><CarbonPresentation /></SimSnapshot>} onClose={() => setDemo(false)} />
         </SimProvider>
       )}
     </div>
