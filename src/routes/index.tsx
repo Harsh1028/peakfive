@@ -1,3 +1,4 @@
+import { TeamSection } from "@/components/site/team";
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import {
   ArrowUpRight,

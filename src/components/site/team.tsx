@@ -14,7 +14,12 @@ const TEAM: Member[] = [
     role: "Frontend Development & Systems Integration",
     education: "Systems Automation Engineering Technology, McMaster University",
     bio: "Harshveer focuses on PEAKFIVE's frontend development, system integration, and user experience. His work includes developing the interactive dashboard, connecting external data services, and integrating the website with the Python optimization backend to transform complex engineering calculations into accessible visualizations.",
-    expertise: ["Frontend Development", "API Integration", "Systems Automation", "Data Visualization"],
+    expertise: [
+      "Frontend Development",
+      "API Integration",
+      "Systems Automation",
+      "Data Visualization",
+    ],
   },
   {
     name: "Harshith",
@@ -33,7 +38,12 @@ const TEAM: Member[] = [
     role: "Business Strategy & Commercialization",
     education: "Mechatronics Engineering | MBA",
     bio: "Kampan Ananthamoorthy brings a combination of engineering knowledge and business strategy to PEAKFIVE. With a background in Mechatronics Engineering and MBA studies, he focuses on market research, commercial feasibility, competitive analysis, and business-model development. His work helps connect PEAKFIVE's technical capabilities with potential opportunities in the municipal water and energy sectors.",
-    expertise: ["Business Strategy", "Market Research", "Commercialization", "Mechatronics Engineering"],
+    expertise: [
+      "Business Strategy",
+      "Market Research",
+      "Commercialization",
+      "Mechatronics Engineering",
+    ],
   },
 ];
 
@@ -73,7 +83,12 @@ export function TeamSection() {
               ))}
             </ul>
             {m.linkedin && (
-              <a href={m.linkedin} target="_blank" rel="noreferrer" className="mt-4 text-sm text-primary">
+              <a
+                href={m.linkedin}
+                target="_blank"
+                rel="noreferrer"
+                className="mt-4 text-sm text-primary"
+              >
                 LinkedIn →
               </a>
             )}

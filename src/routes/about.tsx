@@ -1,3 +1,4 @@
+import { TeamSection } from "@/components/site/team";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { seo } from "@/lib/seo";
 export const Route = createFileRoute("/about")({
