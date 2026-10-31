@@ -16,7 +16,7 @@ function CarbonPage() {
     <>
       <PageHeader
         title="Carbon Intelligence"
-        sub="Understand the environmental footprint of municipal pumping operations using verified electricity-emissions data."
+        sub="Estimated emissions for the Hamilton-inspired synthetic water system."
         right={
           <Tag tone="ok">
             <Leaf className="h-3 w-3" />

@@ -1,11 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { SimProvider, SimSnapshot, useSim } from "@/lib/sim-store";
 import { BackendSettings } from "@/components/pf/backend-controls";
 import { Presentation } from "lucide-react";
 import { seo } from "@/lib/seo";
 import { DemandChart, StorageChart } from "@/components/pf/charts";
-import { DemoMode } from "@/components/pf/demo";
+import { HamiltonDemo } from "@/components/pf/hamilton-demo";
+import { HamiltonFacts, HamiltonOverview } from "@/components/pf/hamilton";
 import {
   DataControls,
   IllustrativeBanner,
@@ -16,7 +16,7 @@ import {
 } from "@/components/pf/panels";
 import { Btn, Panel } from "@/components/pf/ui";
 import { PumpStation, Tank } from "@/components/pf/visuals";
-import { EnvironmentalSummary, CarbonPresentation } from "@/components/pf/carbon";
+import { EnvironmentalSummary } from "@/components/pf/carbon";
 
 export const Route = createFileRoute("/")({
   head: () =>
@@ -29,7 +29,6 @@ export const Route = createFileRoute("/")({
 
 function Overview() {
   const [demo, setDemo] = useState(false);
-  const actual = useSim();
   return (
     <div className="space-y-5">
       <div className="flex flex-wrap items-end justify-between gap-4">
@@ -50,6 +49,7 @@ function Overview() {
           <OptimizeButton />
         </div>
       </div>
+      <HamiltonOverview />
       <IllustrativeBanner />
       <BackendSettings />
       <InfeasiblePanel />
@@ -86,18 +86,8 @@ function Overview() {
           <StorageChart />
         </Panel>
       </div>
-      {demo && (
-        <SimProvider initialMode="demo">
-          <DemoMode
-            sustainability={
-              <SimSnapshot value={actual}>
-                <CarbonPresentation />
-              </SimSnapshot>
-            }
-            onClose={() => setDemo(false)}
-          />
-        </SimProvider>
-      )}
+      <HamiltonFacts />
+      {demo && <HamiltonDemo onClose={() => setDemo(false)} />}
     </div>
   );
 }

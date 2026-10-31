@@ -1,11 +1,18 @@
 # PEAKFIVE backend integration
 
+## Hamilton municipal case study
+- [x] Add historical infrastructure context, transparency labels and connected scenario entry points; Woodward capacity verified.
+- [x] Add a five-stage actual-backend Hamilton demonstration and retain operational scenario controls.
+- [x] Add prospective pilot requirements and carbon context without inventing savings or affiliation.
+- [x] Verify unchanged defaults (56 tests), live normal/fire/outage solves, 96-slot timelines, playback, infeasibility, connection errors, actual Climatiq reporting and narrow-screen layouts with normal browser security.
+- [ ] Independently confirm 24 stations / 13 underground reservoirs / 7 towers: official 2024 water-budget slide download is blocked by the City's meeting-portal browser verification; upload of that PDF is needed. Counts are visibly marked verification pending.
+
 - [x] Inspect the existing interface and identify integration dependencies.
 - [x] Obtain authoritative frontend_handoff.md.
 - [x] Obtain Render production URL https://peakfive-api.onrender.com; verify production-origin CORS.
 - [x] Configure the production API address while preserving the existing design.
 - [x] Test real schedule playback, charts, pump animations, fire/outage scenarios and clear failure states (54 regression tests passed).
-- [ ] Permit editor preview/local CORS on Render (requires owner to add the preview origin and http://localhost:8080 to PEAKFIVE_CORS_ORIGINS; production origin already passes).
+- [x] Local Render CORS now permits http://localhost:8080; complete Hamilton UI flow passed with normal browser security.
 - [x] Implement typed health/optimization client with a 45-second timeout.
 - [x] Adapt shared schedule state and visualizations to actual results and backend statuses.
 - [x] Add the specified system defaults and fire/pump-outage controls.

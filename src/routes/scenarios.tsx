@@ -22,8 +22,8 @@ function Scenarios() {
     return (
       <div className="space-y-5">
         <PageHeader
-          title="Scenario Simulator: Break the System"
-          sub="Illustrative pump and water parameters · backend-verified schedules"
+          title="Test the Hamilton-Inspired Scenario"
+          sub="Explore how the simulated pumping system responds to changing operational requirements."
           right={<OptimizeButton />}
         />
         <BackendScenarios />

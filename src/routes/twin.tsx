@@ -3,7 +3,8 @@ import { seo } from "@/lib/seo";
 import { CAPACITY } from "@/lib/engine";
 import { useSim } from "@/lib/sim-store";
 import { StorageChart, WaterBalanceChart } from "@/components/pf/charts";
-import { Playback } from "@/components/pf/panels";
+import { Playback, InfeasiblePanel, ValidationPanel } from "@/components/pf/panels";
+import { HamiltonSystem, HamiltonTransparency } from "@/components/pf/hamilton";
 import { PageHeader, Panel, Tag } from "@/components/pf/ui";
 import { PumpStation, Tank } from "@/components/pf/visuals";
 
@@ -17,7 +18,7 @@ export const Route = createFileRoute("/twin")({
 });
 
 function Twin() {
-  const { config, view, capacity, demand, pumps, mode, system } = useSim();
+  const { config, view, capacity, demand, pumps, mode, opt } = useSim();
   return (
     <div className="space-y-5">
       <PageHeader
@@ -27,7 +28,13 @@ function Twin() {
           <Tag tone="info">{mode === "backend" ? "Backend schedule" : `Demo ${view} schedule`}</Tag>
         }
       />
+      <HamiltonSystem />
+      <HamiltonTransparency />
+      <InfeasiblePanel />
       <Playback />
+      {opt?.feasible && opt.plan && (
+        <ValidationPanel validation={opt.plan.validation} title="Returned schedule checks" />
+      )}
       <div className="grid gap-5 lg:grid-cols-2">
         <Panel title="Reservoir">
           <Tank />
