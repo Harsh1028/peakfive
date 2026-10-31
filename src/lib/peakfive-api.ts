@@ -18,7 +18,7 @@ const requestSchema = z.object({ date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).r
 const responseSchema = z.object({ status: z.enum(["optimal", "feasible_timeout", "infeasible", "timeout_no_solution", "invalid_input", "error"]), schedule: z.array(z.object({ slot: z.number().int().min(0).max(95), pumps_on: z.array(z.string()), kw: finite, tank_m3: finite })), coincident_kw_before: z.null(), coincident_kw_after: finite.nullable(), explanation: z.string() });
 export type OptimizeResponse = z.infer<typeof responseSchema>;
 export const REQUEST_TIMEOUT_MS = 45_000;
-export const configuredApiUrl = () => (import.meta.env.VITE_PEAKFIVE_API as string | undefined)?.trim() ?? "";
+export const configuredApiUrl = () => (import.meta.env['VITE_PEAKFIVE_API'] as string | undefined)?.trim() ?? "";
 export function normalizeApiUrl(value: string) {
   if (!value.trim()) throw new Error("Backend address is not configured. Enter your teammate’s HTTPS API address.");
   const url = new URL(value.trim());

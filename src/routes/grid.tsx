@@ -31,11 +31,11 @@ function Grid() {
             <div><dt className="text-xs text-muted-foreground">Swing</dt><dd className="text-lg">{(max - min).toLocaleString()} MW</dd></div>
           </dl>
         </Panel>
-        <Panel title="Grid factor (optimizer input)" sub="Normalized daily demand, 0–1">
+        <Panel title="Grid demand context" sub="Normalized daily demand, 0–1">
           <div className="flex h-28 items-end gap-0.5">
             {gf.map((v, i) => <div key={i} title={`HE${i + 1}: ${v.toFixed(2)}`} className="flex-1 rounded-t bg-primary/70" style={{ height: `${Math.max(4, v * 100)}%` }} />)}
           </div>
-          <p className="mt-2 text-xs text-muted-foreground">Cost weight = 1 + 0.35 × grid factor + 6.5 inside the risk window. Illustrative preferences, not tariffs.</p>
+          <p className="mt-2 text-xs text-muted-foreground">Normalized IESO demand is context only. The backend receives the selected peak window, not this grid series.</p>
         </Panel>
         <IciPanel />
       </div>
