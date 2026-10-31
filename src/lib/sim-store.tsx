@@ -405,7 +405,9 @@ export function SimProvider({
     resetOpt();
     const ticket = revision.current;
     const request = {
-      date, system, events,
+      date,
+      system,
+      events,
       peak_window: { start_slot: peakWindow.peakStart * 4, end_slot: peakWindow.peakEnd * 4 },
     };
     setComparing(true);
@@ -420,17 +422,29 @@ export function SimProvider({
         if (plans) {
           setComparisonBaseline(plans.baseline);
           setBackendResult(plans.optimizedResult);
-          setOpt({ feasible: true, plan: plans.optimized, reason: result.explanation, ranAt: Date.now() });
+          setOpt({
+            feasible: true,
+            plan: plans.optimized,
+            reason: result.explanation,
+            ranAt: Date.now(),
+          });
           setView("optimized");
         }
       }
       setConnection("Connected");
     } catch (e) {
       const reason = e instanceof Error ? e.message : "Comparison request failed";
-      if (ticket === revision.current) setComparison({
-        status: "error", label: "Simulated comparison — not measured Hamilton data or financial savings.",
-        explanation: reason, peak_window: null, energy: null, baseline: null, optimized: null, caveats: [],
-      });
+      if (ticket === revision.current)
+        setComparison({
+          status: "error",
+          label: "Simulated comparison — not measured Hamilton data or financial savings.",
+          explanation: reason,
+          peak_window: null,
+          energy: null,
+          baseline: null,
+          optimized: null,
+          caveats: [],
+        });
       setConnection("Disconnected");
       setConnectionError(reason);
     } finally {
@@ -500,8 +514,8 @@ export function SimProvider({
       ? view === "baseline" && comparisonBaseline
         ? comparisonBaseline
         : opt?.feasible && opt.plan
-        ? opt.plan
-        : empty
+          ? opt.plan
+          : empty
       : view === "optimized" && opt?.feasible && opt.plan
         ? opt.plan
         : baseline;
@@ -532,11 +546,12 @@ export function SimProvider({
     comparisonBaseline,
     comparing,
     runCompare,
-    activeSchedule: mode === "backend"
-      ? view === "baseline" && comparisonBaseline
-        ? comparison?.baseline?.schedule ?? null
-        : backendResult?.schedule ?? null
-      : null,
+    activeSchedule:
+      mode === "backend"
+        ? view === "baseline" && comparisonBaseline
+          ? (comparison?.baseline?.schedule ?? null)
+          : (backendResult?.schedule ?? null)
+        : null,
     demand,
     capacity: mode === "backend" ? system.tank.capacity_m3 : 420,
     pumps:

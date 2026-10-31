@@ -25,7 +25,18 @@ export const Route = createFileRoute("/optimizer")({
 });
 
 function Optimizer() {
-  const { baseline, opt, view, setView, config, mode, backendResult, comparisonBaseline, activeSchedule, active } = useSim();
+  const {
+    baseline,
+    opt,
+    view,
+    setView,
+    config,
+    mode,
+    backendResult,
+    comparisonBaseline,
+    activeSchedule,
+    active,
+  } = useSim();
   const o = opt?.feasible ? opt.plan : undefined;
   if (mode === "backend")
     return (
@@ -33,7 +44,12 @@ function Optimizer() {
         <PageHeader
           title="Schedule Optimizer"
           sub="Actual FastAPI scheduling results · illustrative water system"
-          right={<div className="flex flex-wrap gap-2"><OptimizeButton /><CompareButton /></div>}
+          right={
+            <div className="flex flex-wrap gap-2">
+              <OptimizeButton />
+              <CompareButton />
+            </div>
+          }
         />
         <HamiltonStrategy />
         <InfeasiblePanel />
@@ -55,13 +71,20 @@ function Optimizer() {
                 : "Awaiting backend schedule"}
           </p>
         </Panel>
-        {!comparisonBaseline && <Panel title="Pump timelines">
-          {o ? (
-            <Gantt combos={active.combos} levels={active.eval.levels} label="SIMULATED BACKEND SCHEDULE" schedule={activeSchedule ?? undefined} />
-          ) : (
-            <p className="text-sm text-muted-foreground">No backend schedule available.</p>
-          )}
-        </Panel>}
+        {!comparisonBaseline && (
+          <Panel title="Pump timelines">
+            {o ? (
+              <Gantt
+                combos={active.combos}
+                levels={active.eval.levels}
+                label="SIMULATED BACKEND SCHEDULE"
+                schedule={activeSchedule ?? undefined}
+              />
+            ) : (
+              <p className="text-sm text-muted-foreground">No backend schedule available.</p>
+            )}
+          </Panel>
+        )}
         <div className="grid gap-5 lg:grid-cols-2">
           <Panel title="Facility power-demand profile">
             <LoadChart />

@@ -127,7 +127,10 @@ export function KpiCards() {
       label: mode === "backend" ? "Peak-Window Demand" : "Peak-Window Reduction",
       value:
         mode === "backend"
-          ? ((view === "baseline" ? comparison?.peak_window?.baseline_kw : backendResult?.coincident_kw_after)?.toFixed(1) ?? "—")
+          ? ((view === "baseline"
+              ? comparison?.peak_window?.baseline_kw
+              : backendResult?.coincident_kw_after
+            )?.toFixed(1) ?? "—")
           : reduction === null
             ? "—"
             : reduction.toFixed(1),

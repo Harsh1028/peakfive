@@ -330,7 +330,9 @@ export function LoadChart({ height = 200 }: { height?: number }) {
         <Legend
           formatter={(v) =>
             v === "base"
-              ? mode === "backend" ? "Simulated baseline site load (kW)" : "Baseline pump load (kW)"
+              ? mode === "backend"
+                ? "Simulated baseline site load (kW)"
+                : "Baseline pump load (kW)"
               : mode === "backend"
                 ? "Simulated optimized site load (kW)"
                 : "Optimized pump load (kW)"
