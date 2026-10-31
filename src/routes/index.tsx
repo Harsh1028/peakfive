@@ -178,19 +178,7 @@ function Home() {
       </section>
       <section className="site-band">
         <div className="site-inner">
-          <h2 className="text-3xl font-semibold">About the team</h2>
-          <p className="mt-3 text-muted-foreground">
-            Team details will be published when supplied.
-          </p>
-          <div className="mt-8 grid gap-5 md:grid-cols-3">
-            {[1, 2, 3].map((i) => (
-              <article key={i} className="rounded-lg border border-border p-6">
-                <span className="num text-primary">0{i}</span>
-                <h3 className="mt-4 text-lg">Team member {i}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">Name and biography pending.</p>
-              </article>
-            ))}
-          </div>
+          <TeamSection />
         </div>
       </section>
     </>
