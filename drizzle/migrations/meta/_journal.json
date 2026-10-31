@@ -1,5 +1,13 @@
 {
   "version": "7",
   "dialect": "postgresql",
-  "entries": []
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1793468322192,
+      "tag": "0000_peakfive_private_accounts",
+      "breakpoints": true
+    }
+  ]
 }
