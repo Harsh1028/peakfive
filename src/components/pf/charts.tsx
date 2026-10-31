@@ -60,7 +60,7 @@ export function StorageChart({ height = 220 }: { height?: number }) {
 }
 
 export function WaterBalanceChart({ height = 220 }: { height?: number }) {
-  const { active, step, demand, hasSchedule } = useSim();
+  const { active, step, demand, hasSchedule, config } = useSim();
   if (!hasSchedule) return <div className="flex items-center justify-center text-sm text-muted-foreground" style={{ height }}>Awaiting a backend schedule</div>;
   const data = demand.map((d, t) => ({ t, demand: d, pumped: active.eval.pumped[t] }));
   return (
