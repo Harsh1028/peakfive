@@ -34,7 +34,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (!["SIGNED_IN", "SIGNED_OUT", "USER_UPDATED", "PASSWORD_RECOVERY"].includes(event)) return;
       setUser(session?.user ?? null);
       setLoading(false);
-      if ((event === "SIGNED_IN" || event === "SIGNED_OUT") && lastUser.current !== (session?.user.id ?? null)) {
+      if (
+        (event === "SIGNED_IN" || event === "SIGNED_OUT") &&
+        lastUser.current !== (session?.user.id ?? null)
+      ) {
         lastUser.current = session?.user.id ?? null;
         void query.cancelQueries();
         query.clear();

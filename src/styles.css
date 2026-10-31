@@ -228,7 +228,9 @@
   align-items: center;
   overflow: hidden;
 }
-.site-hero .site-inner { padding-block: 48px 74px; }
+.site-hero .site-inner {
+  padding-block: 48px 74px;
+}
 .site-hero::after {
   content: "";
   position: absolute;

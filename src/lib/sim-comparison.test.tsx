@@ -23,10 +23,29 @@ afterEach(() => vi.clearAllMocks());
 describe("shared comparison schedules", () => {
   it("restores saved inputs without manufacturing any solver output", async () => {
     compare.mockResolvedValue(comparisonResponseSchema.parse(available));
-    render(<SimProvider><Capture /></SimProvider>);
-    await act(async()=>{await store.runCompare();});
-    await act(async()=>{store.restoreRequest({date:"2025-08-01",system:{...DEFAULT_SYSTEM,base_load_kw:42},events:[{type:"pump_outage",pump_id:"P1",start_slot:24,end_slot:28}],peak_window:{start_slot:40,end_slot:56}});});
-    expect(store.system.base_load_kw).toBe(42);expect(store.date).toBe("2025-08-01");expect(store.config.peakStart).toBe(10);expect(store.events[0]?.type).toBe("pump_outage");expect(store.hasSchedule).toBe(false);expect(store.backendResult).toBeNull();expect(store.comparison).toBeNull();
+    render(
+      <SimProvider>
+        <Capture />
+      </SimProvider>,
+    );
+    await act(async () => {
+      await store.runCompare();
+    });
+    await act(async () => {
+      store.restoreRequest({
+        date: "2025-08-01",
+        system: { ...DEFAULT_SYSTEM, base_load_kw: 42 },
+        events: [{ type: "pump_outage", pump_id: "P1", start_slot: 24, end_slot: 28 }],
+        peak_window: { start_slot: 40, end_slot: 56 },
+      });
+    });
+    expect(store.system.base_load_kw).toBe(42);
+    expect(store.date).toBe("2025-08-01");
+    expect(store.config.peakStart).toBe(10);
+    expect(store.events[0]?.type).toBe("pump_outage");
+    expect(store.hasSchedule).toBe(false);
+    expect(store.backendResult).toBeNull();
+    expect(store.comparison).toBeNull();
   });
   it("switches baseline playback without changing the optimized Climatiq input and clears edited results", async () => {
     compare.mockResolvedValue(comparisonResponseSchema.parse(available));
