@@ -9,3 +9,9 @@
 - [x] Separate demo schedules and suppress unsupported baseline savings claims.
 - [x] Test request/response rules (36 tests pass) and browser wiring with explicitly mocked contract responses.
 - [ ] Verify optimization end-to-end against the real backend (blocked by missing deployed backend URL).
+
+## Carbon Intelligence
+- [ ] Configure secure Climatiq access and verify its electricity contract.
+- [ ] Add schedule-linked carbon accounting, exact-input caching and failure handling.
+- [ ] Add Carbon Intelligence, overview summary and optional presentation stage.
+- [ ] Test accounting rules, existing features and live Climatiq response.
