@@ -1,5 +1,3 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { seo } from "@/lib/seo";
 import { BackendScenarios } from "@/components/pf/backend-controls";
 import { DEFAULT_CONFIG } from "@/lib/engine";
 import { useSim } from "@/lib/sim-store";
@@ -7,16 +5,7 @@ import { StorageChart } from "@/components/pf/charts";
 import { Gantt, InfeasiblePanel, OptimizeButton, ValidationPanel } from "@/components/pf/panels";
 import { Btn, NumField, PageHeader, Panel, Tag } from "@/components/pf/ui";
 
-export const Route = createFileRoute("/scenarios")({
-  head: () =>
-    seo(
-      "Scenario Simulator",
-      "Break the system: fail pumps, raise reserves and move the risk window to test PEAKFIVE's feasibility checks.",
-    ),
-  component: Scenarios,
-});
-
-function Scenarios() {
+export function Simulator() {
   const s = useSim();
   if (s.mode === "backend")
     return (

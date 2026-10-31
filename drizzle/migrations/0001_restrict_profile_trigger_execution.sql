@@ -1,0 +1,1 @@
+REVOKE EXECUTE ON FUNCTION public.create_peakfive_profile() FROM anon, authenticated;

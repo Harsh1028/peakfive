@@ -19,16 +19,18 @@ import { cn } from "@/lib/utils";
 import { SourceBadge } from "./panels";
 import { Tag } from "./ui";
 import { BackendConnection } from "./backend-controls";
+import { useAuth } from "@/lib/auth-store";
+import { AccountMenu } from "@/components/site/account-menu";
 
 const NAV = [
-  { to: "/", label: "Overview Dashboard", icon: LayoutDashboard },
+  { to: "/demo", label: "Interactive Demonstration", icon: LayoutDashboard },
   { to: "/hamilton", label: "Verified Hamilton Water Data", icon: Database },
   { to: "/grid", label: "Grid Intelligence", icon: Radio },
   { to: "/twin", label: "Water System Digital Twin", icon: Waves },
   { to: "/optimizer", label: "Schedule Optimizer", icon: Cpu },
   { to: "/financial", label: "Financial Analysis", icon: Wallet },
   { to: "/carbon", label: "Carbon Intelligence", icon: Leaf },
-  { to: "/scenarios", label: "Scenario Simulator", icon: FlaskConical },
+  { to: "/simulator", label: "Scenario Simulator", icon: FlaskConical },
   { to: "/business", label: "Business Model", icon: Briefcase },
   { to: "/methodology", label: "Data Sources & Methodology", icon: Database },
 ] as const;
@@ -37,6 +39,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const path = useRouterState({ select: (s) => s.location.pathname });
   const [open, setOpen] = useState(false);
   const { dataset } = useSim();
+  const auth = useAuth();
   const verifiedView = path === "/hamilton";
   return (
     <div className="flex min-h-screen">
@@ -61,6 +64,19 @@ export function AppShell({ children }: { children: ReactNode }) {
           </button>
         </div>
         <nav className="space-y-1">
+          <Link to="/" className="block px-3 py-2 text-sm text-muted-foreground">
+            ← Public website
+          </Link>
+          {auth.user && (
+            <>
+              <Link to="/dashboard" className="block px-3 py-2 text-sm text-primary">
+                My Dashboard
+              </Link>
+              <Link to="/scenarios" className="block px-3 py-2 text-sm text-muted-foreground">
+                My Scenarios
+              </Link>
+            </>
+          )}
           {NAV.map((n) => {
             const on = path === n.to;
             return (
@@ -91,6 +107,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             <Menu className="h-5 w-5" />
           </button>
           <div className="ml-auto flex flex-wrap items-center gap-2">
+            <AccountMenu />
             {verifiedView ? (
               <>
                 <Tag tone="ok">Verified Public Data</Tag>

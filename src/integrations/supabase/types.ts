@@ -14,7 +14,91 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      account_deletion_requests: {
+        Row: {
+          requested_at: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          requested_at?: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          requested_at?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "account_deletion_requests_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          display_name: string
+          id: string
+          terms_accepted_at: string | null
+          terms_version: string | null
+        }
+        Insert: {
+          created_at?: string
+          display_name?: string
+          id: string
+          terms_accepted_at?: string | null
+          terms_version?: string | null
+        }
+        Update: {
+          created_at?: string
+          display_name?: string
+          id?: string
+          terms_accepted_at?: string | null
+          terms_version?: string | null
+        }
+        Relationships: []
+      }
+      saved_scenarios: {
+        Row: {
+          created_at: string
+          description: string
+          id: string
+          inputs: Json
+          name: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          id?: string
+          inputs: Json
+          name: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: string
+          inputs?: Json
+          name?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "saved_scenarios_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

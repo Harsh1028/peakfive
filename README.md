@@ -1,5 +1,15 @@
 # Welcome to your Lovable project
 
+## Public site and accounts
+
+- `/` is the public website; `/demo` and `/simulator` preserve account-free live engineering workflows.
+- `/dashboard`, `/scenarios` and `/settings` use the authenticated layout. Owner-scoped server functions and database RLS protect private profiles and saved configurations.
+- Email verification remains required. Google and Lovable sign-in are enabled. Provider settings include published and preview return origins; no authentication secrets are stored in frontend code.
+- Saved scenarios contain complete validated inputs only. Opening them clears results; a new run uses the real service. No absent model-version provenance is invented.
+- Account deletion creates a confirmed private request, not immediate automatic deletion. Team/contact details, legal review, request handling and stronger Render abuse limits remain deployment prerequisites.
+- Verification: 112 regression tests, real test-account login/refresh/logout, profile edits, saved scenario save/open/rerun/duplicate/delete and cross-account RLS isolation passed. Temporary test accounts were removed. Public comparison and genuine Climatiq reporting passed with normal browser security.
+- Real signup verification-email delivery, recovery-email completion, email-change links, social provider round trips and published-site behavior remain unverified. Reserved test email domains are rejected by the managed sender; production verification was not disabled for testing.
+
 ## PEAKFIVE FastAPI connection
 
 Vite configuration supplies `VITE_PEAKFIVE_API` as `https://peakfive-api.onrender.com` for the production service. There is deliberately no localhost fallback. The dashboard's **API base URL** control also accepts a session-only override for connection checks.

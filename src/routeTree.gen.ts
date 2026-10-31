@@ -10,19 +10,50 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AboutRouteImport } from './routes/about'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as BusinessRouteImport } from './routes/business'
 import { Route as CarbonRouteImport } from './routes/carbon'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as DemoRouteImport } from './routes/demo'
 import { Route as FinancialRouteImport } from './routes/financial'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as GridRouteImport } from './routes/grid'
 import { Route as HamiltonRouteImport } from './routes/hamilton'
+import { Route as HowItWorksRouteImport } from './routes/how-it-works'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as MethodologyRouteImport } from './routes/methodology'
 import { Route as OptimizerRouteImport } from './routes/optimizer'
-import { Route as ScenariosRouteImport } from './routes/scenarios'
+import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as SignupRouteImport } from './routes/signup'
+import { Route as SimulatorRouteImport } from './routes/simulator'
+import { Route as TechnologyRouteImport } from './routes/technology'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as TwinRouteImport } from './routes/twin'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedScenariosRouteImport } from './routes/_authenticated/scenarios'
+import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
+import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BusinessRoute = BusinessRouteImport.update({
@@ -35,9 +66,24 @@ const CarbonRoute = CarbonRouteImport.update({
   path: '/carbon',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DemoRoute = DemoRouteImport.update({
+  id: '/demo',
+  path: '/demo',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FinancialRoute = FinancialRouteImport.update({
   id: '/financial',
   path: '/financial',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GridRoute = GridRouteImport.update({
@@ -50,6 +96,16 @@ const HamiltonRoute = HamiltonRouteImport.update({
   path: '/hamilton',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HowItWorksRoute = HowItWorksRouteImport.update({
+  id: '/how-it-works',
+  path: '/how-it-works',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MethodologyRoute = MethodologyRouteImport.update({
   id: '/methodology',
   path: '/methodology',
@@ -60,9 +116,34 @@ const OptimizerRoute = OptimizerRouteImport.update({
   path: '/optimizer',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ScenariosRoute = ScenariosRouteImport.update({
-  id: '/scenarios',
-  path: '/scenarios',
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SimulatorRoute = SimulatorRouteImport.update({
+  id: '/simulator',
+  path: '/simulator',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TechnologyRoute = TechnologyRouteImport.update({
+  id: '/technology',
+  path: '/technology',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TwinRoute = TwinRouteImport.update({
@@ -70,93 +151,224 @@ const TwinRoute = TwinRouteImport.update({
   path: '/twin',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedScenariosRoute = AuthenticatedScenariosRouteImport.update({
+  id: '/scenarios',
+  path: '/scenarios',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthCallbackRoute = AuthCallbackRouteImport.update({
+  id: '/callback',
+  path: '/callback',
+  getParentRoute: () => AuthRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/auth': typeof AuthRouteWithChildren
   '/business': typeof BusinessRoute
   '/carbon': typeof CarbonRoute
+  '/contact': typeof ContactRoute
+  '/demo': typeof DemoRoute
   '/financial': typeof FinancialRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/grid': typeof GridRoute
   '/hamilton': typeof HamiltonRoute
+  '/how-it-works': typeof HowItWorksRoute
+  '/login': typeof LoginRoute
   '/methodology': typeof MethodologyRoute
   '/optimizer': typeof OptimizerRoute
-  '/scenarios': typeof ScenariosRoute
+  '/privacy': typeof PrivacyRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/signup': typeof SignupRoute
+  '/simulator': typeof SimulatorRoute
+  '/technology': typeof TechnologyRoute
+  '/terms': typeof TermsRoute
   '/twin': typeof TwinRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/scenarios': typeof AuthenticatedScenariosRoute
+  '/settings': typeof AuthenticatedSettingsRoute
+  '/auth/callback': typeof AuthCallbackRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
+  '/auth': typeof AuthRouteWithChildren
   '/business': typeof BusinessRoute
   '/carbon': typeof CarbonRoute
+  '/contact': typeof ContactRoute
+  '/demo': typeof DemoRoute
   '/financial': typeof FinancialRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/grid': typeof GridRoute
   '/hamilton': typeof HamiltonRoute
+  '/how-it-works': typeof HowItWorksRoute
+  '/login': typeof LoginRoute
   '/methodology': typeof MethodologyRoute
   '/optimizer': typeof OptimizerRoute
-  '/scenarios': typeof ScenariosRoute
+  '/privacy': typeof PrivacyRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/signup': typeof SignupRoute
+  '/simulator': typeof SimulatorRoute
+  '/technology': typeof TechnologyRoute
+  '/terms': typeof TermsRoute
   '/twin': typeof TwinRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/scenarios': typeof AuthenticatedScenariosRoute
+  '/settings': typeof AuthenticatedSettingsRoute
+  '/auth/callback': typeof AuthCallbackRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/about': typeof AboutRoute
+  '/auth': typeof AuthRouteWithChildren
   '/business': typeof BusinessRoute
   '/carbon': typeof CarbonRoute
+  '/contact': typeof ContactRoute
+  '/demo': typeof DemoRoute
   '/financial': typeof FinancialRoute
+  '/forgot-password': typeof ForgotPasswordRoute
   '/grid': typeof GridRoute
   '/hamilton': typeof HamiltonRoute
+  '/how-it-works': typeof HowItWorksRoute
+  '/login': typeof LoginRoute
   '/methodology': typeof MethodologyRoute
   '/optimizer': typeof OptimizerRoute
-  '/scenarios': typeof ScenariosRoute
+  '/privacy': typeof PrivacyRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/signup': typeof SignupRoute
+  '/simulator': typeof SimulatorRoute
+  '/technology': typeof TechnologyRoute
+  '/terms': typeof TermsRoute
   '/twin': typeof TwinRoute
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/scenarios': typeof AuthenticatedScenariosRoute
+  '/_authenticated/settings': typeof AuthenticatedSettingsRoute
+  '/auth/callback': typeof AuthCallbackRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/about'
+    | '/auth'
     | '/business'
     | '/carbon'
+    | '/contact'
+    | '/demo'
     | '/financial'
+    | '/forgot-password'
     | '/grid'
     | '/hamilton'
+    | '/how-it-works'
+    | '/login'
     | '/methodology'
     | '/optimizer'
-    | '/scenarios'
+    | '/privacy'
+    | '/reset-password'
+    | '/signup'
+    | '/simulator'
+    | '/technology'
+    | '/terms'
     | '/twin'
+    | '/dashboard'
+    | '/scenarios'
+    | '/settings'
+    | '/auth/callback'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/about'
+    | '/auth'
     | '/business'
     | '/carbon'
+    | '/contact'
+    | '/demo'
     | '/financial'
+    | '/forgot-password'
     | '/grid'
     | '/hamilton'
+    | '/how-it-works'
+    | '/login'
     | '/methodology'
     | '/optimizer'
-    | '/scenarios'
+    | '/privacy'
+    | '/reset-password'
+    | '/signup'
+    | '/simulator'
+    | '/technology'
+    | '/terms'
     | '/twin'
+    | '/dashboard'
+    | '/scenarios'
+    | '/settings'
+    | '/auth/callback'
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
+    | '/about'
+    | '/auth'
     | '/business'
     | '/carbon'
+    | '/contact'
+    | '/demo'
     | '/financial'
+    | '/forgot-password'
     | '/grid'
     | '/hamilton'
+    | '/how-it-works'
+    | '/login'
     | '/methodology'
     | '/optimizer'
-    | '/scenarios'
+    | '/privacy'
+    | '/reset-password'
+    | '/signup'
+    | '/simulator'
+    | '/technology'
+    | '/terms'
     | '/twin'
+    | '/_authenticated/dashboard'
+    | '/_authenticated/scenarios'
+    | '/_authenticated/settings'
+    | '/auth/callback'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AboutRoute: typeof AboutRoute
+  AuthRoute: typeof AuthRouteWithChildren
   BusinessRoute: typeof BusinessRoute
   CarbonRoute: typeof CarbonRoute
+  ContactRoute: typeof ContactRoute
+  DemoRoute: typeof DemoRoute
   FinancialRoute: typeof FinancialRoute
+  ForgotPasswordRoute: typeof ForgotPasswordRoute
   GridRoute: typeof GridRoute
   HamiltonRoute: typeof HamiltonRoute
+  HowItWorksRoute: typeof HowItWorksRoute
+  LoginRoute: typeof LoginRoute
   MethodologyRoute: typeof MethodologyRoute
   OptimizerRoute: typeof OptimizerRoute
-  ScenariosRoute: typeof ScenariosRoute
+  PrivacyRoute: typeof PrivacyRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
+  SignupRoute: typeof SignupRoute
+  SimulatorRoute: typeof SimulatorRoute
+  TechnologyRoute: typeof TechnologyRoute
+  TermsRoute: typeof TermsRoute
   TwinRoute: typeof TwinRoute
 }
 
@@ -167,6 +379,27 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/business': {
@@ -183,11 +416,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CarbonRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/demo': {
+      id: '/demo'
+      path: '/demo'
+      fullPath: '/demo'
+      preLoaderRoute: typeof DemoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/financial': {
       id: '/financial'
       path: '/financial'
       fullPath: '/financial'
       preLoaderRoute: typeof FinancialRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/grid': {
@@ -204,6 +458,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HamiltonRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/how-it-works': {
+      id: '/how-it-works'
+      path: '/how-it-works'
+      fullPath: '/how-it-works'
+      preLoaderRoute: typeof HowItWorksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/methodology': {
       id: '/methodology'
       path: '/methodology'
@@ -218,11 +486,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OptimizerRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/scenarios': {
-      id: '/scenarios'
-      path: '/scenarios'
-      fullPath: '/scenarios'
-      preLoaderRoute: typeof ScenariosRouteImport
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/simulator': {
+      id: '/simulator'
+      path: '/simulator'
+      fullPath: '/simulator'
+      preLoaderRoute: typeof SimulatorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/technology': {
+      id: '/technology'
+      path: '/technology'
+      fullPath: '/technology'
+      preLoaderRoute: typeof TechnologyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/twin': {
@@ -232,19 +535,85 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TwinRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/scenarios': {
+      id: '/_authenticated/scenarios'
+      path: '/scenarios'
+      fullPath: '/scenarios'
+      preLoaderRoute: typeof AuthenticatedScenariosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/settings': {
+      id: '/_authenticated/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AuthenticatedSettingsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/auth/callback': {
+      id: '/auth/callback'
+      path: '/callback'
+      fullPath: '/auth/callback'
+      preLoaderRoute: typeof AuthCallbackRouteImport
+      parentRoute: typeof AuthRoute
+    }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedScenariosRoute: typeof AuthenticatedScenariosRoute
+  AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedScenariosRoute: AuthenticatedScenariosRoute,
+  AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
+interface AuthRouteChildren {
+  AuthCallbackRoute: typeof AuthCallbackRoute
+}
+
+const AuthRouteChildren: AuthRouteChildren = {
+  AuthCallbackRoute: AuthCallbackRoute,
+}
+
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AboutRoute: AboutRoute,
+  AuthRoute: AuthRouteWithChildren,
   BusinessRoute: BusinessRoute,
   CarbonRoute: CarbonRoute,
+  ContactRoute: ContactRoute,
+  DemoRoute: DemoRoute,
   FinancialRoute: FinancialRoute,
+  ForgotPasswordRoute: ForgotPasswordRoute,
   GridRoute: GridRoute,
   HamiltonRoute: HamiltonRoute,
+  HowItWorksRoute: HowItWorksRoute,
+  LoginRoute: LoginRoute,
   MethodologyRoute: MethodologyRoute,
   OptimizerRoute: OptimizerRoute,
-  ScenariosRoute: ScenariosRoute,
+  PrivacyRoute: PrivacyRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
+  SignupRoute: SignupRoute,
+  SimulatorRoute: SimulatorRoute,
+  TechnologyRoute: TechnologyRoute,
+  TermsRoute: TermsRoute,
   TwinRoute: TwinRoute,
 }
 export const routeTree = rootRouteImport
