@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useSim } from "@/lib/sim-store";
 import { BackendScenarios } from "./backend-controls";
-import { EnvironmentalSummary } from "./carbon";
+import { EnvironmentalSummary, CarbonPresentation } from "./carbon";
+import { HamiltonWaterDashboard } from "./hamilton-water-data";
 import { DemandChart, StorageChart } from "./charts";
 import { HamiltonFacts, HamiltonSystem, HamiltonTransparency, HamiltonStrategy } from "./hamilton";
 import { Gantt, InfeasiblePanel, OptimizeButton, Playback, ValidationPanel } from "./panels";
@@ -10,11 +11,12 @@ import { Btn, Panel, Tag } from "./ui";
 import { PumpStation, Tank } from "./visuals";
 
 const STAGES = [
-  "Hamilton's Challenge",
-  "Our Simulated System",
-  "Intelligent Scheduling",
-  "Operational Reliability",
+  "Real Hamilton Infrastructure",
+  "Water Pumping Challenge",
+  "Engineering Simulation",
+  "Live Optimization",
   "Operational Challenge",
+  "Environmental Analysis",
 ];
 
 export function HamiltonDemo({ onClose }: { onClose: () => void }) {
@@ -94,7 +96,7 @@ export function HamiltonDemo({ onClose }: { onClose: () => void }) {
         </nav>
         <div className="flex flex-wrap items-center gap-3">
           <h3 className="text-xl font-semibold">{STAGES[stage]}</h3>
-          <Tag tone="warn">Synthetic water system · actual Python calculations</Tag>
+          <Tag tone={stage === 0 ? "ok" : "warn"}>{stage === 0 ? "Verified Public Data · reporting year 2025" : "Engineering Simulation · not Hamilton operating telemetry"}</Tag>
         </div>
         {stage === 0 && (
           <>
@@ -103,16 +105,14 @@ export function HamiltonDemo({ onClose }: { onClose: () => void }) {
               offer flexibility in when pumping electricity is consumed; potential benefits depend
               on actual operating constraints and verified tariffs.
             </p>
+            <HamiltonWaterDashboard compact />
             <HamiltonFacts />
-            <Panel
-              title="Ontario electricity-demand context"
-              sub="Verified IESO measurements when available; otherwise explicitly illustrative."
-            >
-              <DemandChart height={240} />
-            </Panel>
           </>
         )}
         {stage === 1 && (
+          <><HamiltonStrategy /><HamiltonTransparency /></>
+        )}
+        {stage === 2 && (
           <>
             <HamiltonSystem actions={false} />
             <HamiltonTransparency />
@@ -126,7 +126,7 @@ export function HamiltonDemo({ onClose }: { onClose: () => void }) {
             </div>
           </>
         )}
-        {stage === 2 && (
+        {stage === 3 && (
           <>
             <HamiltonSystem />
             <p className="text-sm text-muted-foreground">
@@ -146,30 +146,22 @@ export function HamiltonDemo({ onClose }: { onClose: () => void }) {
                 </Panel>
                 <ValidationPanel validation={plan.validation} title="Returned schedule checks" />
                 <EnvironmentalSummary />
+                <Playback />
+                <div className="grid gap-5 md:grid-cols-2"><Panel title="Simulated reservoir"><Tank /></Panel><Panel title="Calculated pump states"><PumpStation /></Panel></div>
+                <Panel title="Calculated storage"><StorageChart /></Panel>
               </>
             )}
           </>
         )}
-        {stage === 3 && (
+        {stage === 5 && (
           <>
-            <Playback />
-            <div className="grid gap-5 md:grid-cols-2">
-              <Panel title="Reservoir water balance">
-                <Tank />
-              </Panel>
-              <Panel title="Pump ON/OFF states">
-                <PumpStation />
-              </Panel>
-            </div>
-            <Panel title="Calculated storage through the day">
-              <StorageChart />
-            </Panel>
-            <HamiltonStrategy />
+            <p className="text-sm text-muted-foreground">Estimated emissions for the Hamilton-inspired synthetic water system — not actual City emissions or claimed savings.</p>
+            <CarbonPresentation />
             {plan ? (
               <ValidationPanel validation={plan.validation} title="Returned schedule checks" />
             ) : (
               <p className="text-sm text-warning">
-                No validated schedule available. Run optimization in Intelligent Scheduling.
+                No validated schedule available. Run optimization in Live Optimization.
               </p>
             )}
             <InfeasiblePanel />
@@ -205,7 +197,7 @@ export function HamiltonDemo({ onClose }: { onClose: () => void }) {
             <ChevronLeft className="h-4 w-4" />
             Back
           </Btn>
-          {stage < 4 ? (
+          {stage < 5 ? (
             <Btn variant="primary" onClick={() => setStage(stage + 1)}>
               Next
               <ChevronRight className="h-4 w-4" />

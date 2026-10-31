@@ -13,6 +13,7 @@ import {
 import { useSim } from "@/lib/sim-store";
 import { Btn, Tag } from "./ui";
 import { OptimizeButton } from "./panels";
+import { HAMILTON_REPORT } from "@/lib/hamilton-data";
 
 const BUDGET_URL =
   "https://www.hamilton.ca/city-council/city-administration/city-budget/2024-tax-rate-budget/2024-rate-budget";
@@ -27,35 +28,34 @@ export function HamiltonFacts() {
           Hamilton's Water Infrastructure
         </h2>
         <p className="mt-1 text-xs text-muted-foreground">
-          Published municipal context — not live measurements or specifications of our simulated
-          subsystem.
+          Woodward distribution-system context · 2025 annual report, section 2.2.1, printed page 7.
         </p>
       </div>
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         {[
           {
             icon: Gauge,
-            value: "24",
+            value: "22",
             label: "Water Pumping Stations",
-            period: "Provided 2024 budget figure · verification pending",
+            period: "Woodward distribution system · reported 2025",
           },
           {
             icon: Waves,
-            value: "13",
-            label: "Underground Reservoirs",
-            period: "Provided 2024 budget figure · verification pending",
+            value: "10",
+            label: "Reservoirs",
+            period: "Woodward distribution system · reported 2025",
           },
           {
             icon: Droplets,
-            value: "7",
-            label: "Water Towers",
-            period: "Provided 2024 budget figure · verification pending",
+            value: "4 + 1",
+            label: "Elevated Storage Tanks + Standpipe",
+            period: "Woodward distribution system · reported 2025",
           },
           {
             icon: Zap,
-            value: "909,000",
-            label: "m³/day · Woodward Water Treatment Facility rated capacity",
-            period: "Published rated capacity · not model demand",
+            value: "≈2,130",
+            label: "km of Water Mains",
+            period: "Approximate published network length · 2025",
           },
         ].map(({ icon: Icon, value, label, period }) => (
           <article key={label} className="rounded-lg border border-border bg-card p-4">
@@ -67,17 +67,15 @@ export function HamiltonFacts() {
         ))}
       </div>
       <div className="flex flex-wrap gap-x-5 gap-y-2 text-xs">
-        <a href={BUDGET_URL} target="_blank" rel="noreferrer" className="text-primary underline">
-          City of Hamilton · 2024 rate budget ↗
+        <a href={`${HAMILTON_REPORT.url}#page=7`} target="_blank" rel="noreferrer" className="text-primary underline">
+          City of Hamilton · 2025 annual report · printed page 7 ↗
         </a>
         <a href={WATER_URL} target="_blank" rel="noreferrer" className="text-primary underline">
           City of Hamilton · Drinking-water system ↗
         </a>
       </div>
-      <p className="text-xs text-warning">
-        The three network counts are supplied in the case-study brief and await confirmation against
-        the official 2024 water-budget slides. Woodward's rated capacity is confirmed on the City's
-        drinking-water page.
+      <p className="text-xs text-muted-foreground">
+        These confirmed Woodward subsystem figures replace unconfirmed city-wide 2024 counts; reporting scopes are not interchangeable. No City equipment is connected.
       </p>
     </section>
   );
