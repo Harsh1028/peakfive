@@ -5,7 +5,6 @@ import { useSim } from "@/lib/sim-store";
 import { StorageChart } from "@/components/pf/charts";
 import { Gantt, InfeasiblePanel, OptimizeButton, ValidationPanel } from "@/components/pf/panels";
 import { Btn, NumField, PageHeader, Panel, Tag } from "@/components/pf/ui";
-import { Switch } from "@/components/ui/switch";
 
 export const Route = createFileRoute("/scenarios")({
   head: () => seo("Scenario Simulator", "Break the system: fail pumps, raise reserves and move the risk window to test PEAKFIVE's feasibility checks."),
@@ -41,7 +40,10 @@ function Scenarios() {
           </div>
           <div className="mt-4 space-y-3 text-sm">
             {([["pump1", "Pump 1 available"], ["pump2", "Pump 2 available"], ["freeze", "Freeze baseline schedule"]] as const).map(([k, l]) => (
-              <label key={k} className="flex items-center justify-between">{l}<Switch checked={d[k]} onCheckedChange={(v) => s.setDraft({ [k]: v })} /></label>
+              <label key={k} className="flex items-center justify-between">{l}<button type="button" role="switch" aria-checked={d[k]} aria-label={l} onClick={() => s.setDraft({ [k]: !d[k] })}
+                  className={`relative h-6 w-11 rounded-full transition-colors ${d[k] ? "bg-success" : "bg-idle"}`}>
+                  <span className={`absolute top-0.5 h-5 w-5 rounded-full bg-foreground transition-all ${d[k] ? "left-5" : "left-0.5"}`} />
+                </button></label>
             ))}
           </div>
           <p className="mt-3 text-[11px] text-muted-foreground">Toggles change simulation constraints only — never real equipment.</p>
