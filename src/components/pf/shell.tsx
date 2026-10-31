@@ -1,5 +1,17 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { BarChart3, Briefcase, Cpu, Database, FlaskConical, LayoutDashboard, Menu, Radio, Waves, Wallet, X } from "lucide-react";
+import {
+  BarChart3,
+  Briefcase,
+  Cpu,
+  Database,
+  FlaskConical,
+  LayoutDashboard,
+  Menu,
+  Radio,
+  Waves,
+  Wallet,
+  X,
+} from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { useSim } from "@/lib/sim-store";
 import { cn } from "@/lib/utils";
@@ -24,36 +36,65 @@ export function AppShell({ children }: { children: ReactNode }) {
   const { dataset } = useSim();
   return (
     <div className="flex min-h-screen">
-      <aside className={cn("fixed inset-y-0 left-0 z-40 w-64 border-r border-sidebar-border bg-sidebar p-4 transition-transform lg:translate-x-0", open ? "translate-x-0" : "-translate-x-full")}>
+      <aside
+        className={cn(
+          "fixed inset-y-0 left-0 z-40 w-64 border-r border-sidebar-border bg-sidebar p-4 transition-transform lg:translate-x-0",
+          open ? "translate-x-0" : "-translate-x-full",
+        )}
+      >
         <div className="mb-8 flex items-center justify-between px-2 pt-2">
           <div>
             <div className="flex items-center gap-2 font-display text-xl font-bold tracking-tight">
-              <BarChart3 className="h-5 w-5 text-primary" />PEAK<span className="text-primary">FIVE</span>
+              <BarChart3 className="h-5 w-5 text-primary" />
+              PEAK<span className="text-primary">FIVE</span>
             </div>
-            <div className="mt-0.5 text-[11px] italic text-muted-foreground">Intelligent Infrastructure Optimization</div>
+            <div className="mt-0.5 text-[11px] italic text-muted-foreground">
+              Intelligent Infrastructure Optimization
+            </div>
           </div>
-          <button className="lg:hidden" onClick={() => setOpen(false)} aria-label="Close menu"><X className="h-5 w-5" /></button>
+          <button className="lg:hidden" onClick={() => setOpen(false)} aria-label="Close menu">
+            <X className="h-5 w-5" />
+          </button>
         </div>
         <nav className="space-y-1">
           {NAV.map((n) => {
             const on = path === n.to;
             return (
-              <Link key={n.to} to={n.to} onClick={() => setOpen(false)}
-                className={cn("flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors", on ? "bg-sidebar-accent text-primary" : "text-muted-foreground hover:bg-sidebar-accent hover:text-foreground")}>
-                <n.icon className="h-4 w-4" />{n.label}
+              <Link
+                key={n.to}
+                to={n.to}
+                onClick={() => setOpen(false)}
+                className={cn(
+                  "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors",
+                  on
+                    ? "bg-sidebar-accent text-primary"
+                    : "text-muted-foreground hover:bg-sidebar-accent hover:text-foreground",
+                )}
+              >
+                <n.icon className="h-4 w-4" />
+                {n.label}
               </Link>
             );
           })}
         </nav>
-        <p className="absolute bottom-4 left-4 right-4 text-[10px] leading-relaxed text-muted-foreground">Decision support only. Never connected to SCADA, PLCs or real pump hardware.</p>
+        <p className="absolute bottom-4 left-4 right-4 text-[10px] leading-relaxed text-muted-foreground">
+          Decision support only. Never connected to SCADA, PLCs or real pump hardware.
+        </p>
       </aside>
       <div className="flex min-w-0 flex-1 flex-col lg:pl-64">
         <header className="sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-border bg-background/80 px-4 py-3 backdrop-blur md:px-8">
-          <button className="lg:hidden" onClick={() => setOpen(true)} aria-label="Open menu"><Menu className="h-5 w-5" /></button>
+          <button className="lg:hidden" onClick={() => setOpen(true)} aria-label="Open menu">
+            <Menu className="h-5 w-5" />
+          </button>
           <div className="ml-auto flex flex-wrap items-center gap-2">
-            <Tag tone="muted"><span className="num">{dataset.date}</span></Tag>
+            <Tag tone="muted">
+              <span className="num">{dataset.date}</span>
+            </Tag>
             <SourceBadge />
-            <Tag tone="info"><span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse-dot" />Illustrative water system</Tag>
+            <Tag tone="info">
+              <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse-dot" />
+              Illustrative water system
+            </Tag>
             <BackendConnection />
           </div>
         </header>
