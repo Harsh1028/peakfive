@@ -11,5 +11,7 @@
 
 ## Project rules
 - `noUncheckedIndexedAccess` and `exactOptionalPropertyTypes` are off: the simulation engine indexes fixed-length 96-step/24-hour arrays everywhere, and the checks added noise without catching real bugs.
-- All simulation logic (baseline, DP optimizer, validator) lives in `src/lib/engine.ts` as pure functions with tests in `src/lib/engine.test.ts`; UI reads it only through the `SimProvider` store in `src/lib/sim-store.tsx` so every chart shares one state.
+- Frontend-only demo simulation stays in `src/lib/engine.ts`; actual FastAPI contracts, validation and schedule adaptation live in `src/lib/peakfive-api.ts`, with tests beside each module, so local simulation is never a backend fallback.
+- All schedule-driven UI reads through `SimProvider`; the guided frontend demo uses a separate provider instance so demo changes never replace actual API results.
+- The API client calls the externally configured FastAPI service directly from browser actions without credentials; its base URL comes from Vite configuration or the session-only address control, so no Cloud proxy or hardcoded production endpoint is required.
 - IESO CSV parsing lives in `src/lib/ieso.ts` and is shared by the server fetch (`ieso.functions.ts`) and browser uploads, so both paths apply identical validation.
