@@ -22,6 +22,7 @@ import { BackendConnection } from "./backend-controls";
 
 const NAV = [
   { to: "/", label: "Overview Dashboard", icon: LayoutDashboard },
+  { to: "/hamilton", label: "Verified Hamilton Water Data", icon: Database },
   { to: "/grid", label: "Grid Intelligence", icon: Radio },
   { to: "/twin", label: "Water System Digital Twin", icon: Waves },
   { to: "/optimizer", label: "Schedule Optimizer", icon: Cpu },
@@ -36,6 +37,7 @@ export function AppShell({ children }: { children: ReactNode }) {
   const path = useRouterState({ select: (s) => s.location.pathname });
   const [open, setOpen] = useState(false);
   const { dataset } = useSim();
+  const verifiedView = path === "/hamilton";
   return (
     <div className="flex min-h-screen">
       <aside
@@ -89,15 +91,24 @@ export function AppShell({ children }: { children: ReactNode }) {
             <Menu className="h-5 w-5" />
           </button>
           <div className="ml-auto flex flex-wrap items-center gap-2">
-            <Tag tone="muted">
-              <span className="num">{dataset.date}</span>
-            </Tag>
-            <SourceBadge />
-            <Tag tone="info">
-              <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse-dot" />
-              Illustrative water system
-            </Tag>
-            <BackendConnection />
+            {verifiedView ? (
+              <>
+                <Tag tone="ok">Verified Public Data</Tag>
+                <Tag tone="muted">Woodward · reporting year 2025</Tag>
+              </>
+            ) : (
+              <>
+                <Tag tone="muted">
+                  <span className="num">{dataset.date}</span>
+                </Tag>
+                <SourceBadge />
+                <Tag tone="info">
+                  <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse-dot" />
+                  Engineering Simulation
+                </Tag>
+                <BackendConnection />
+              </>
+            )}
           </div>
         </header>
         <main className="flex-1 px-4 py-6 md:px-8">{children}</main>

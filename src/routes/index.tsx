@@ -17,6 +17,7 @@ import {
 import { Btn, Panel } from "@/components/pf/ui";
 import { PumpStation, Tank } from "@/components/pf/visuals";
 import { EnvironmentalSummary } from "@/components/pf/carbon";
+import { HamiltonViewModes } from "@/components/pf/hamilton-water-data";
 
 export const Route = createFileRoute("/")({
   head: () =>
@@ -50,6 +51,11 @@ function Overview() {
         </div>
       </div>
       <HamiltonOverview />
+      <HamiltonViewModes />
+      <p className="text-xs text-warning">
+        Engineering Simulation · synthetic pump and tank inputs; calculated schedules are not
+        measured Hamilton operations.
+      </p>
       <IllustrativeBanner />
       <BackendSettings />
       <InfeasiblePanel />

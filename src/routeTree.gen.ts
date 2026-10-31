@@ -14,6 +14,7 @@ import { Route as BusinessRouteImport } from './routes/business'
 import { Route as CarbonRouteImport } from './routes/carbon'
 import { Route as FinancialRouteImport } from './routes/financial'
 import { Route as GridRouteImport } from './routes/grid'
+import { Route as HamiltonRouteImport } from './routes/hamilton'
 import { Route as MethodologyRouteImport } from './routes/methodology'
 import { Route as OptimizerRouteImport } from './routes/optimizer'
 import { Route as ScenariosRouteImport } from './routes/scenarios'
@@ -44,6 +45,11 @@ const GridRoute = GridRouteImport.update({
   path: '/grid',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HamiltonRoute = HamiltonRouteImport.update({
+  id: '/hamilton',
+  path: '/hamilton',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MethodologyRoute = MethodologyRouteImport.update({
   id: '/methodology',
   path: '/methodology',
@@ -71,6 +77,7 @@ export interface FileRoutesByFullPath {
   '/carbon': typeof CarbonRoute
   '/financial': typeof FinancialRoute
   '/grid': typeof GridRoute
+  '/hamilton': typeof HamiltonRoute
   '/methodology': typeof MethodologyRoute
   '/optimizer': typeof OptimizerRoute
   '/scenarios': typeof ScenariosRoute
@@ -82,6 +89,7 @@ export interface FileRoutesByTo {
   '/carbon': typeof CarbonRoute
   '/financial': typeof FinancialRoute
   '/grid': typeof GridRoute
+  '/hamilton': typeof HamiltonRoute
   '/methodology': typeof MethodologyRoute
   '/optimizer': typeof OptimizerRoute
   '/scenarios': typeof ScenariosRoute
@@ -94,6 +102,7 @@ export interface FileRoutesById {
   '/carbon': typeof CarbonRoute
   '/financial': typeof FinancialRoute
   '/grid': typeof GridRoute
+  '/hamilton': typeof HamiltonRoute
   '/methodology': typeof MethodologyRoute
   '/optimizer': typeof OptimizerRoute
   '/scenarios': typeof ScenariosRoute
@@ -107,6 +116,7 @@ export interface FileRouteTypes {
     | '/carbon'
     | '/financial'
     | '/grid'
+    | '/hamilton'
     | '/methodology'
     | '/optimizer'
     | '/scenarios'
@@ -118,6 +128,7 @@ export interface FileRouteTypes {
     | '/carbon'
     | '/financial'
     | '/grid'
+    | '/hamilton'
     | '/methodology'
     | '/optimizer'
     | '/scenarios'
@@ -129,6 +140,7 @@ export interface FileRouteTypes {
     | '/carbon'
     | '/financial'
     | '/grid'
+    | '/hamilton'
     | '/methodology'
     | '/optimizer'
     | '/scenarios'
@@ -141,6 +153,7 @@ export interface RootRouteChildren {
   CarbonRoute: typeof CarbonRoute
   FinancialRoute: typeof FinancialRoute
   GridRoute: typeof GridRoute
+  HamiltonRoute: typeof HamiltonRoute
   MethodologyRoute: typeof MethodologyRoute
   OptimizerRoute: typeof OptimizerRoute
   ScenariosRoute: typeof ScenariosRoute
@@ -184,6 +197,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GridRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/hamilton': {
+      id: '/hamilton'
+      path: '/hamilton'
+      fullPath: '/hamilton'
+      preLoaderRoute: typeof HamiltonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/methodology': {
       id: '/methodology'
       path: '/methodology'
@@ -221,6 +241,7 @@ const rootRouteChildren: RootRouteChildren = {
   CarbonRoute: CarbonRoute,
   FinancialRoute: FinancialRoute,
   GridRoute: GridRoute,
+  HamiltonRoute: HamiltonRoute,
   MethodologyRoute: MethodologyRoute,
   OptimizerRoute: OptimizerRoute,
   ScenariosRoute: ScenariosRoute,

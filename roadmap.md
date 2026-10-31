@@ -1,11 +1,18 @@
 # PEAKFIVE backend integration
 
+## Verified Hamilton water data
+- [x] Verify all 36 Table 2-3 production values and Woodward infrastructure (section 2.2.1, page 8) against the official 2025 report; disclose capacity-label differences and unstated publication date.
+- [x] Add measured-data dashboard and explicit verified-data / engineering-simulation viewing modes.
+- [x] Add provenance-documented operational JSON import with interval, timezone, unit and duplicate validation, isolated from optimization; user attestation is not independent authenticity verification.
+- [x] Update guided demonstration to six stages with real production evidence and simulated-schedule emissions.
+- [x] Test exact published values, import rules (89 tests), live 96-slot optimization, playback, changed-constraint recalculation, Climatiq and full presentation flow; verify narrow-screen measured-data view.
+
 ## Hamilton municipal case study
 - [x] Add historical infrastructure context, transparency labels and connected scenario entry points; Woodward capacity verified.
 - [x] Add a five-stage actual-backend Hamilton demonstration and retain operational scenario controls.
 - [x] Add prospective pilot requirements and carbon context without inventing savings or affiliation.
 - [x] Verify unchanged defaults (56 tests), live normal/fire/outage solves, 96-slot timelines, playback, infeasibility, connection errors, actual Climatiq reporting and narrow-screen layouts with normal browser security.
-- [ ] Independently confirm 24 stations / 13 underground reservoirs / 7 towers: official 2024 water-budget slide download is blocked by the City's meeting-portal browser verification; upload of that PDF is needed. Counts are visibly marked verification pending.
+- [x] Replace unconfirmed 2024 city-wide figures with confirmed 2025 Woodward-subsystem infrastructure from the accessible annual report; preserve the different reporting scope.
 
 - [x] Inspect the existing interface and identify integration dependencies.
 - [x] Obtain authoritative frontend_handoff.md.
