@@ -52,7 +52,10 @@ function Overview() {
       </div>
       <HamiltonOverview />
       <HamiltonViewModes />
-      <p className="text-xs text-warning">Engineering Simulation · synthetic pump and tank inputs; calculated schedules are not measured Hamilton operations.</p>
+      <p className="text-xs text-warning">
+        Engineering Simulation · synthetic pump and tank inputs; calculated schedules are not
+        measured Hamilton operations.
+      </p>
       <IllustrativeBanner />
       <BackendSettings />
       <InfeasiblePanel />

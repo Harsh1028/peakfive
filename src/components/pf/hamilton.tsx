@@ -67,7 +67,12 @@ export function HamiltonFacts() {
         ))}
       </div>
       <div className="flex flex-wrap gap-x-5 gap-y-2 text-xs">
-        <a href={`${HAMILTON_REPORT.url}#page=8`} target="_blank" rel="noreferrer" className="text-primary underline">
+        <a
+          href={`${HAMILTON_REPORT.url}#page=8`}
+          target="_blank"
+          rel="noreferrer"
+          className="text-primary underline"
+        >
           City of Hamilton · 2025 annual report · printed page 8 ↗
         </a>
         <a href={WATER_URL} target="_blank" rel="noreferrer" className="text-primary underline">
@@ -75,7 +80,8 @@ export function HamiltonFacts() {
         </a>
       </div>
       <p className="text-xs text-muted-foreground">
-        These confirmed Woodward subsystem figures replace unconfirmed city-wide 2024 counts; reporting scopes are not interchangeable. No City equipment is connected.
+        These confirmed Woodward subsystem figures replace unconfirmed city-wide 2024 counts;
+        reporting scopes are not interchangeable. No City equipment is connected.
       </p>
     </section>
   );

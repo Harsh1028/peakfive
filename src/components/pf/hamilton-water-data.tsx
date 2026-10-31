@@ -8,28 +8,243 @@ import { UtilityDataImport } from "./utility-import";
 
 export function HamiltonViewModes() {
   const navigate = useNavigate();
-  const verified = useRouterState({ select: s => s.location.pathname === "/hamilton" });
-  return <div role="group" aria-label="Data viewing mode" className="flex flex-wrap gap-2"><Btn size="sm" variant={verified ? "active" : "ghost"} aria-pressed={verified} onClick={() => navigate({ to: "/hamilton" })}><Database className="h-4 w-4" />Verified Hamilton Data</Btn><Btn size="sm" variant={!verified ? "active" : "ghost"} aria-pressed={!verified} onClick={() => navigate({ to: "/" })}>Engineering Simulation<ArrowRight className="h-4 w-4" /></Btn></div>;
+  const verified = useRouterState({ select: (s) => s.location.pathname === "/hamilton" });
+  return (
+    <div role="group" aria-label="Data viewing mode" className="flex flex-wrap gap-2">
+      <Btn
+        size="sm"
+        variant={verified ? "active" : "ghost"}
+        aria-pressed={verified}
+        onClick={() => navigate({ to: "/hamilton" })}
+      >
+        <Database className="h-4 w-4" />
+        Verified Hamilton Data
+      </Btn>
+      <Btn
+        size="sm"
+        variant={!verified ? "active" : "ghost"}
+        aria-pressed={!verified}
+        onClick={() => navigate({ to: "/" })}
+      >
+        Engineering Simulation
+        <ArrowRight className="h-4 w-4" />
+      </Btn>
+    </div>
+  );
 }
 
 export function WaterSource() {
-  return <p className="mt-3 text-xs text-muted-foreground">Source: City of Hamilton, 2025 Drinking Water Systems Annual Report. <a className="text-primary underline" href={`${HAMILTON_REPORT.url}#page=12`} target="_blank" rel="noreferrer">Original PDF · Table 2-3 · printed page 12 ↗</a><br />Woodward Treatment Plant · reporting year 2025 · report hosted under 2026-02 (publication date not stated in PDF).</p>;
+  return (
+    <p className="mt-3 text-xs text-muted-foreground">
+      Source: City of Hamilton, 2025 Drinking Water Systems Annual Report.{" "}
+      <a
+        className="text-primary underline"
+        href={`${HAMILTON_REPORT.url}#page=12`}
+        target="_blank"
+        rel="noreferrer"
+      >
+        Original PDF · Table 2-3 · printed page 12 ↗
+      </a>
+      <br />
+      Woodward Treatment Plant · reporting year 2025 · report hosted under 2026-02 (publication date
+      not stated in PDF).
+    </p>
+  );
 }
 
 export function HamiltonWaterDashboard({ compact = false }: { compact?: boolean }) {
-  const [metric, setMetric] = useState<"monthlyMl" | "averageDailyMl" | "maximumDailyMl">("monthlyMl");
+  const [metric, setMetric] = useState<"monthlyMl" | "averageDailyMl" | "maximumDailyMl">(
+    "monthlyMl",
+  );
   const summary = productionSummary();
   const charts = [
-    { key: "monthlyMl" as const, title: "Monthly treated-water production", unit: "ML", color: "var(--primary)", label: "Monthly total" },
-    { key: "averageDailyMl" as const, title: "Average daily production by month", unit: "ML/day", color: "var(--success)", label: "Reported daily average" },
-    { key: "maximumDailyMl" as const, title: "Maximum reported daily production by month", unit: "ML/day", color: "var(--warning)", label: "Reported daily maximum" },
+    {
+      key: "monthlyMl" as const,
+      title: "Monthly treated-water production",
+      unit: "ML",
+      color: "var(--primary)",
+      label: "Monthly total",
+    },
+    {
+      key: "averageDailyMl" as const,
+      title: "Average daily production by month",
+      unit: "ML/day",
+      color: "var(--success)",
+      label: "Reported daily average",
+    },
+    {
+      key: "maximumDailyMl" as const,
+      title: "Maximum reported daily production by month",
+      unit: "ML/day",
+      color: "var(--warning)",
+      label: "Reported daily maximum",
+    },
   ];
-  return <div className="space-y-5">
-    <div><Tag tone="ok"><Database className="h-3 w-3" />Verified Public Data</Tag><h2 className="mt-2 text-xl font-semibold">Woodward Treatment Plant · 2025 production</h2><p className="mt-1 text-sm text-muted-foreground">Hamilton, Woodward Subsystem · system 220003118 · January–December 2025. Published precision retained: ML = millions of litres.</p></div>
-    <dl className="grid gap-3 sm:grid-cols-3">{[{label:"Annual treated-water production",value:summary.annualMl.toLocaleString()+" ML",note:"Derived: sum of the 12 published monthly totals"},{label:"Highest monthly total",value:summary.highestMonthly.monthlyMl.toLocaleString()+" ML",note:summary.highestMonthly.month+" · reported monthly total"},{label:"Highest reported daily maximum",value:summary.highestDaily.maximumDailyMl+" ML/day",note:summary.highestDaily.month+" · exact observation date not published"}].map(k => <div key={k.label} className="rounded-lg border border-border bg-card p-4"><dt className="text-xs text-muted-foreground">{k.label}</dt><dd className="num mt-2 text-xl text-primary">{k.value}</dd><p className="mt-2 text-xs text-muted-foreground">{k.note}</p></div>)}</dl>
-    <WaterSource />
-    <div role="group" aria-label="Water production metric" className="flex flex-wrap gap-2">{charts.map(c => <Btn key={c.key} size="sm" variant={metric===c.key?"active":"ghost"} aria-pressed={metric===c.key} onClick={() => setMetric(c.key)}>{c.label}</Btn>)}</div>
-    {(compact ? charts.filter(c=>c.key===metric) : [charts.find(c=>c.key===metric),...charts.filter(c=>c.key!==metric)]).map(c => c && <section key={c.key} className="border-t border-border pt-5"><h3 className="font-semibold">{c.title} ({c.unit})</h3><p className="mt-1 text-xs text-muted-foreground">{c.key==="monthlyMl"?"Actual reported monthly total flow, not demand of the simulated subsystem.":c.key==="averageDailyMl"?"Published monthly average daily rate, not individual-day observations.":"Published monthly maximum daily rate; the date of that maximum is not supplied."}</p><div role="img" aria-label={`${c.title}, units ${c.unit}`} className="mt-4 h-64 min-w-0"><ResponsiveContainer width="100%" height="100%"><BarChart data={[...HAMILTON_PRODUCTION]} margin={{left:5,right:10,top:5,bottom:5}}><CartesianGrid vertical={false} stroke="var(--border)" /><XAxis dataKey="month" tickFormatter={v=>String(v).slice(0,3)} stroke="var(--muted-foreground)" fontSize={11} /><YAxis stroke="var(--muted-foreground)" fontSize={11} /><Tooltip contentStyle={{background:"var(--popover)",border:"1px solid var(--border)",color:"var(--foreground)"}} formatter={(v:number)=>[`${v.toLocaleString()} ${c.unit}`,c.label]} /><Bar dataKey={c.key} fill={c.color} radius={[4,4,0,0]} /></BarChart></ResponsiveContainer></div><WaterSource /></section>)}
-    {!compact && <><section className="border-t border-border pt-5"><h2 className="text-lg font-semibold">Published measurements</h2><div className="mt-3 overflow-x-auto"><table className="w-full text-left text-sm"><thead><tr className="border-b border-border text-xs text-muted-foreground"><th className="p-2">2025 month</th><th className="p-2">Monthly total (ML)</th><th className="p-2">Average daily (ML/day)</th><th className="p-2">Maximum daily (ML/day)</th></tr></thead><tbody>{HAMILTON_PRODUCTION.map(r=><tr key={r.month} className="border-b border-border"><th className="p-2 font-normal">{r.month}</th><td className="num p-2">{r.monthlyMl.toLocaleString()}</td><td className="num p-2">{r.averageDailyMl}</td><td className="num p-2">{r.maximumDailyMl}</td></tr>)}</tbody></table></div><WaterSource /></section><section className="space-y-3 border-y border-border py-5"><h2 className="text-lg font-semibold">Documented Woodward distribution infrastructure</h2><p className="text-sm text-muted-foreground">22 pumping stations · 10 reservoirs · 4 elevated storage tanks · 1 standpipe · approximately 2,130 km of water mains.</p><p className="text-xs text-muted-foreground">Source: 2025 annual report, section 2.2.1, printed page 8. Woodward distribution-system scope, not the earlier unconfirmed city-wide 2024 budget figures. <a href={`${HAMILTON_REPORT.url}#page=8`} className="text-primary underline" target="_blank" rel="noreferrer">Original report ↗</a></p><p className="text-xs text-muted-foreground">Table 2-3 separately reports a permit-to-take-water daily limit of 909 ML/day and municipal drinking-water licence rated capacity of 926 ML/day. Neither is observed production. The City's general drinking-water webpage describes 909,000 m³/day as rated capacity; these source labels differ and are not treated as interchangeable.</p></section><p className="border-l-2 border-primary pl-4 text-sm text-muted-foreground">15-minute municipal pump and reservoir telemetry is not available in the connected public datasets. Engineering simulation is available separately.</p><UtilityDataImport /></>}
-  </div>;
+  return (
+    <div className="space-y-5">
+      <div>
+        <Tag tone="ok">
+          <Database className="h-3 w-3" />
+          Verified Public Data
+        </Tag>
+        <h2 className="mt-2 text-xl font-semibold">Woodward Treatment Plant · 2025 production</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Hamilton, Woodward Subsystem · system 220003118 · January–December 2025. Published
+          precision retained: ML = millions of litres.
+        </p>
+      </div>
+      <dl className="grid gap-3 sm:grid-cols-3">
+        {[
+          {
+            label: "Annual treated-water production",
+            value: summary.annualMl.toLocaleString() + " ML",
+            note: "Derived: sum of the 12 published monthly totals",
+          },
+          {
+            label: "Highest monthly total",
+            value: summary.highestMonthly.monthlyMl.toLocaleString() + " ML",
+            note: summary.highestMonthly.month + " · reported monthly total",
+          },
+          {
+            label: "Highest reported daily maximum",
+            value: summary.highestDaily.maximumDailyMl + " ML/day",
+            note: summary.highestDaily.month + " · exact observation date not published",
+          },
+        ].map((k) => (
+          <div key={k.label} className="rounded-lg border border-border bg-card p-4">
+            <dt className="text-xs text-muted-foreground">{k.label}</dt>
+            <dd className="num mt-2 text-xl text-primary">{k.value}</dd>
+            <p className="mt-2 text-xs text-muted-foreground">{k.note}</p>
+          </div>
+        ))}
+      </dl>
+      <WaterSource />
+      <div role="group" aria-label="Water production metric" className="flex flex-wrap gap-2">
+        {charts.map((c) => (
+          <Btn
+            key={c.key}
+            size="sm"
+            variant={metric === c.key ? "active" : "ghost"}
+            aria-pressed={metric === c.key}
+            onClick={() => setMetric(c.key)}
+          >
+            {c.label}
+          </Btn>
+        ))}
+      </div>
+      {(compact
+        ? charts.filter((c) => c.key === metric)
+        : [charts.find((c) => c.key === metric), ...charts.filter((c) => c.key !== metric)]
+      ).map(
+        (c) =>
+          c && (
+            <section key={c.key} className="border-t border-border pt-5">
+              <h3 className="font-semibold">
+                {c.title} ({c.unit})
+              </h3>
+              <p className="mt-1 text-xs text-muted-foreground">
+                {c.key === "monthlyMl"
+                  ? "Actual reported monthly total flow, not demand of the simulated subsystem."
+                  : c.key === "averageDailyMl"
+                    ? "Published monthly average daily rate, not individual-day observations."
+                    : "Published monthly maximum daily rate; the date of that maximum is not supplied."}
+              </p>
+              <div
+                role="img"
+                aria-label={`${c.title}, units ${c.unit}`}
+                className="mt-4 h-64 min-w-0"
+              >
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart
+                    data={[...HAMILTON_PRODUCTION]}
+                    margin={{ left: 5, right: 10, top: 5, bottom: 5 }}
+                  >
+                    <CartesianGrid vertical={false} stroke="var(--border)" />
+                    <XAxis
+                      dataKey="month"
+                      tickFormatter={(v) => String(v).slice(0, 3)}
+                      stroke="var(--muted-foreground)"
+                      fontSize={11}
+                    />
+                    <YAxis stroke="var(--muted-foreground)" fontSize={11} />
+                    <Tooltip
+                      contentStyle={{
+                        background: "var(--popover)",
+                        border: "1px solid var(--border)",
+                        color: "var(--foreground)",
+                      }}
+                      formatter={(v: number) => [`${v.toLocaleString()} ${c.unit}`, c.label]}
+                    />
+                    <Bar dataKey={c.key} fill={c.color} radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+              <WaterSource />
+            </section>
+          ),
+      )}
+      {!compact && (
+        <>
+          <section className="border-t border-border pt-5">
+            <h2 className="text-lg font-semibold">Published measurements</h2>
+            <div className="mt-3 overflow-x-auto">
+              <table className="w-full text-left text-sm">
+                <thead>
+                  <tr className="border-b border-border text-xs text-muted-foreground">
+                    <th className="p-2">2025 month</th>
+                    <th className="p-2">Monthly total (ML)</th>
+                    <th className="p-2">Average daily (ML/day)</th>
+                    <th className="p-2">Maximum daily (ML/day)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {HAMILTON_PRODUCTION.map((r) => (
+                    <tr key={r.month} className="border-b border-border">
+                      <th className="p-2 font-normal">{r.month}</th>
+                      <td className="num p-2">{r.monthlyMl.toLocaleString()}</td>
+                      <td className="num p-2">{r.averageDailyMl}</td>
+                      <td className="num p-2">{r.maximumDailyMl}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <WaterSource />
+          </section>
+          <section className="space-y-3 border-y border-border py-5">
+            <h2 className="text-lg font-semibold">
+              Documented Woodward distribution infrastructure
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              22 pumping stations · 10 reservoirs · 4 elevated storage tanks · 1 standpipe ·
+              approximately 2,130 km of water mains.
+            </p>
+            <p className="text-xs text-muted-foreground">
+              Source: 2025 annual report, section 2.2.1, printed page 8. Woodward
+              distribution-system scope, not the earlier unconfirmed city-wide 2024 budget figures.{" "}
+              <a
+                href={`${HAMILTON_REPORT.url}#page=8`}
+                className="text-primary underline"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Original report ↗
+              </a>
+            </p>
+            <p className="text-xs text-muted-foreground">
+              Table 2-3 separately reports a permit-to-take-water daily limit of 909 ML/day and
+              municipal drinking-water licence rated capacity of 926 ML/day. Neither is observed
+              production. The City's general drinking-water webpage describes 909,000 m³/day as
+              rated capacity; these source labels differ and are not treated as interchangeable.
+            </p>
+          </section>
+          <p className="border-l-2 border-primary pl-4 text-sm text-muted-foreground">
+            15-minute municipal pump and reservoir telemetry is not available in the connected
+            public datasets. Engineering simulation is available separately.
+          </p>
+          <UtilityDataImport />
+        </>
+      )}
+    </div>
+  );
 }

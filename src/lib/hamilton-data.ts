@@ -27,7 +27,9 @@ export const HAMILTON_PRODUCTION = [
 export function productionSummary() {
   return {
     annualMl: HAMILTON_PRODUCTION.reduce((total, row) => total + row.monthlyMl, 0),
-    highestMonthly: HAMILTON_PRODUCTION.reduce((a, b) => b.monthlyMl > a.monthlyMl ? b : a),
-    highestDaily: HAMILTON_PRODUCTION.reduce((a, b) => b.maximumDailyMl > a.maximumDailyMl ? b : a),
+    highestMonthly: HAMILTON_PRODUCTION.reduce((a, b) => (b.monthlyMl > a.monthlyMl ? b : a)),
+    highestDaily: HAMILTON_PRODUCTION.reduce((a, b) =>
+      b.maximumDailyMl > a.maximumDailyMl ? b : a,
+    ),
   };
 }

@@ -96,7 +96,11 @@ export function HamiltonDemo({ onClose }: { onClose: () => void }) {
         </nav>
         <div className="flex flex-wrap items-center gap-3">
           <h3 className="text-xl font-semibold">{STAGES[stage]}</h3>
-          <Tag tone={stage === 0 ? "ok" : "warn"}>{stage === 0 ? "Verified Public Data · reporting year 2025" : "Engineering Simulation · not Hamilton operating telemetry"}</Tag>
+          <Tag tone={stage === 0 ? "ok" : "warn"}>
+            {stage === 0
+              ? "Verified Public Data · reporting year 2025"
+              : "Engineering Simulation · not Hamilton operating telemetry"}
+          </Tag>
         </div>
         {stage === 0 && (
           <>
@@ -110,7 +114,10 @@ export function HamiltonDemo({ onClose }: { onClose: () => void }) {
           </>
         )}
         {stage === 1 && (
-          <><HamiltonStrategy /><HamiltonTransparency /></>
+          <>
+            <HamiltonStrategy />
+            <HamiltonTransparency />
+          </>
         )}
         {stage === 2 && (
           <>
@@ -147,15 +154,27 @@ export function HamiltonDemo({ onClose }: { onClose: () => void }) {
                 <ValidationPanel validation={plan.validation} title="Returned schedule checks" />
                 <EnvironmentalSummary />
                 <Playback />
-                <div className="grid gap-5 md:grid-cols-2"><Panel title="Simulated reservoir"><Tank /></Panel><Panel title="Calculated pump states"><PumpStation /></Panel></div>
-                <Panel title="Calculated storage"><StorageChart /></Panel>
+                <div className="grid gap-5 md:grid-cols-2">
+                  <Panel title="Simulated reservoir">
+                    <Tank />
+                  </Panel>
+                  <Panel title="Calculated pump states">
+                    <PumpStation />
+                  </Panel>
+                </div>
+                <Panel title="Calculated storage">
+                  <StorageChart />
+                </Panel>
               </>
             )}
           </>
         )}
         {stage === 5 && (
           <>
-            <p className="text-sm text-muted-foreground">Estimated emissions for the Hamilton-inspired synthetic water system — not actual City emissions or claimed savings.</p>
+            <p className="text-sm text-muted-foreground">
+              Estimated emissions for the Hamilton-inspired synthetic water system — not actual City
+              emissions or claimed savings.
+            </p>
             <CarbonPresentation />
             {plan ? (
               <ValidationPanel validation={plan.validation} title="Returned schedule checks" />
