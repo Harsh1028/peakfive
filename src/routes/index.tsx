@@ -88,7 +88,14 @@ function Overview() {
       </div>
       {demo && (
         <SimProvider initialMode="demo">
-          <DemoMode sustainability={<SimSnapshot value={actual}><CarbonPresentation /></SimSnapshot>} onClose={() => setDemo(false)} />
+          <DemoMode
+            sustainability={
+              <SimSnapshot value={actual}>
+                <CarbonPresentation />
+              </SimSnapshot>
+            }
+            onClose={() => setDemo(false)}
+          />
         </SimProvider>
       )}
     </div>

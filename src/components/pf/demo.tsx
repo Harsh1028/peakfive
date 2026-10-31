@@ -24,7 +24,13 @@ const STAGES = [
   "Beyond Electricity Costs",
 ];
 
-export function DemoMode({ onClose, sustainability }: { onClose: () => void; sustainability?: ReactNode }) {
+export function DemoMode({
+  onClose,
+  sustainability,
+}: {
+  onClose: () => void;
+  sustainability?: ReactNode;
+}) {
   const [i, setI] = useState(0);
   const s = useSim();
   const restart = () => {
@@ -66,9 +72,11 @@ export function DemoMode({ onClose, sustainability }: { onClose: () => void; sus
           </div>
         </div>
 
-        {i !== 5 && <p className="mb-2 text-sm text-warning">
-          Frontend-only demo simulation — not backend results
-        </p>}
+        {i !== 5 && (
+          <p className="mb-2 text-sm text-warning">
+            Frontend-only demo simulation — not backend results
+          </p>
+        )}
         {i !== 5 && <h2 className="text-3xl font-semibold">{STAGES[i]}</h2>}
         <div className="mt-6 space-y-5">
           {i === 5 && sustainability}

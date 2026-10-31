@@ -536,6 +536,12 @@ export function useSim() {
   return s;
 }
 
-export function SimSnapshot({ value, children }: { value: ReturnType<typeof useSim>; children: ReactNode }) {
+export function SimSnapshot({
+  value,
+  children,
+}: {
+  value: ReturnType<typeof useSim>;
+  children: ReactNode;
+}) {
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
