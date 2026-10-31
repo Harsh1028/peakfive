@@ -15,7 +15,7 @@ export const fetchIesoDay = createServerFn({ method: "GET" })
       let entry = cache.get(year);
       if (!entry || Date.now() - entry.at > TTL) {
         const res = await fetch(`https://reports-public.ieso.ca/public/Demand/PUB_Demand_${year}.csv`, {
-          headers: { "user-agent": "PEAKFIVE/1.0 (hackathon demo)" },
+          headers: { "user-agent": "PEAKFIVE/1.0 (municipal water dashboard)" },
         });
         if (!res.ok) return { ok: false, error: `IESO server returned ${res.status} for ${year}.` };
         entry = { text: await res.text(), at: Date.now() };
