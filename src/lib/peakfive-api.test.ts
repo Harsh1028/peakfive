@@ -173,20 +173,18 @@ describe("FastAPI contract", () => {
   it("reads invalid-input HTTP responses", async () => {
     vi.stubGlobal(
       "fetch",
-      vi
-        .fn()
-        .mockResolvedValue(
-          new Response(
-            JSON.stringify({
-              status: "invalid_input",
-              schedule: [],
-              coincident_kw_before: null,
-              coincident_kw_after: null,
-              explanation: "Bad input",
-            }),
-            { status: 422 },
-          ),
+      vi.fn().mockResolvedValue(
+        new Response(
+          JSON.stringify({
+            status: "invalid_input",
+            schedule: [],
+            coincident_kw_before: null,
+            coincident_kw_after: null,
+            explanation: "Bad input",
+          }),
+          { status: 422 },
         ),
+      ),
     );
     expect((await optimizeRemote("https://api.example.com", request())).status).toBe(
       "invalid_input",

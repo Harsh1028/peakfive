@@ -32,7 +32,9 @@ function Twin() {
       <HamiltonTransparency />
       <InfeasiblePanel />
       <Playback />
-      {opt?.feasible && opt.plan && <ValidationPanel validation={opt.plan.validation} title="Returned schedule checks" />}
+      {opt?.feasible && opt.plan && (
+        <ValidationPanel validation={opt.plan.validation} title="Returned schedule checks" />
+      )}
       <div className="grid gap-5 lg:grid-cols-2">
         <Panel title="Reservoir">
           <Tank />
