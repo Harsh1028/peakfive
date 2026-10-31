@@ -10,8 +10,10 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BusinessRouteImport } from './routes/business'
 import { Route as FinancialRouteImport } from './routes/financial'
 import { Route as GridRouteImport } from './routes/grid'
+import { Route as MethodologyRouteImport } from './routes/methodology'
 import { Route as OptimizerRouteImport } from './routes/optimizer'
 import { Route as ScenariosRouteImport } from './routes/scenarios'
 import { Route as TwinRouteImport } from './routes/twin'
@@ -19,6 +21,11 @@ import { Route as TwinRouteImport } from './routes/twin'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BusinessRoute = BusinessRouteImport.update({
+  id: '/business',
+  path: '/business',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FinancialRoute = FinancialRouteImport.update({
@@ -29,6 +36,11 @@ const FinancialRoute = FinancialRouteImport.update({
 const GridRoute = GridRouteImport.update({
   id: '/grid',
   path: '/grid',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MethodologyRoute = MethodologyRouteImport.update({
+  id: '/methodology',
+  path: '/methodology',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OptimizerRoute = OptimizerRouteImport.update({
@@ -49,16 +61,20 @@ const TwinRoute = TwinRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/business': typeof BusinessRoute
   '/financial': typeof FinancialRoute
   '/grid': typeof GridRoute
+  '/methodology': typeof MethodologyRoute
   '/optimizer': typeof OptimizerRoute
   '/scenarios': typeof ScenariosRoute
   '/twin': typeof TwinRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/business': typeof BusinessRoute
   '/financial': typeof FinancialRoute
   '/grid': typeof GridRoute
+  '/methodology': typeof MethodologyRoute
   '/optimizer': typeof OptimizerRoute
   '/scenarios': typeof ScenariosRoute
   '/twin': typeof TwinRoute
@@ -66,8 +82,10 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/business': typeof BusinessRoute
   '/financial': typeof FinancialRoute
   '/grid': typeof GridRoute
+  '/methodology': typeof MethodologyRoute
   '/optimizer': typeof OptimizerRoute
   '/scenarios': typeof ScenariosRoute
   '/twin': typeof TwinRoute
@@ -75,14 +93,31 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/financial' | '/grid' | '/optimizer' | '/scenarios' | '/twin'
+    | '/'
+    | '/business'
+    | '/financial'
+    | '/grid'
+    | '/methodology'
+    | '/optimizer'
+    | '/scenarios'
+    | '/twin'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/financial' | '/grid' | '/optimizer' | '/scenarios' | '/twin'
+  to:
+    | '/'
+    | '/business'
+    | '/financial'
+    | '/grid'
+    | '/methodology'
+    | '/optimizer'
+    | '/scenarios'
+    | '/twin'
   id:
     | '__root__'
     | '/'
+    | '/business'
     | '/financial'
     | '/grid'
+    | '/methodology'
     | '/optimizer'
     | '/scenarios'
     | '/twin'
@@ -90,8 +125,10 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BusinessRoute: typeof BusinessRoute
   FinancialRoute: typeof FinancialRoute
   GridRoute: typeof GridRoute
+  MethodologyRoute: typeof MethodologyRoute
   OptimizerRoute: typeof OptimizerRoute
   ScenariosRoute: typeof ScenariosRoute
   TwinRoute: typeof TwinRoute
@@ -106,6 +143,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/business': {
+      id: '/business'
+      path: '/business'
+      fullPath: '/business'
+      preLoaderRoute: typeof BusinessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/financial': {
       id: '/financial'
       path: '/financial'
@@ -118,6 +162,13 @@ declare module '@tanstack/react-router' {
       path: '/grid'
       fullPath: '/grid'
       preLoaderRoute: typeof GridRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/methodology': {
+      id: '/methodology'
+      path: '/methodology'
+      fullPath: '/methodology'
+      preLoaderRoute: typeof MethodologyRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/optimizer': {
@@ -146,8 +197,10 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BusinessRoute: BusinessRoute,
   FinancialRoute: FinancialRoute,
   GridRoute: GridRoute,
+  MethodologyRoute: MethodologyRoute,
   OptimizerRoute: OptimizerRoute,
   ScenariosRoute: ScenariosRoute,
   TwinRoute: TwinRoute,
