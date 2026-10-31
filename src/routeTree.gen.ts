@@ -11,15 +11,21 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as BusinessRouteImport } from './routes/business'
 import { Route as CarbonRouteImport } from './routes/carbon'
+import { Route as ContactRouteImport } from './routes/contact'
 import { Route as DemoRouteImport } from './routes/demo'
 import { Route as FinancialRouteImport } from './routes/financial'
 import { Route as GridRouteImport } from './routes/grid'
 import { Route as HamiltonRouteImport } from './routes/hamilton'
+import { Route as HowItWorksRouteImport } from './routes/how-it-works'
 import { Route as MethodologyRouteImport } from './routes/methodology'
 import { Route as OptimizerRouteImport } from './routes/optimizer'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as SimulatorRouteImport } from './routes/simulator'
+import { Route as TechnologyRouteImport } from './routes/technology'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as TwinRouteImport } from './routes/twin'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 
@@ -32,6 +38,11 @@ const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
   id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BusinessRoute = BusinessRouteImport.update({
   id: '/business',
   path: '/business',
@@ -40,6 +51,11 @@ const BusinessRoute = BusinessRouteImport.update({
 const CarbonRoute = CarbonRouteImport.update({
   id: '/carbon',
   path: '/carbon',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DemoRoute = DemoRouteImport.update({
@@ -62,6 +78,11 @@ const HamiltonRoute = HamiltonRouteImport.update({
   path: '/hamilton',
   getParentRoute: () => rootRouteImport,
 } as any)
+const HowItWorksRoute = HowItWorksRouteImport.update({
+  id: '/how-it-works',
+  path: '/how-it-works',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MethodologyRoute = MethodologyRouteImport.update({
   id: '/methodology',
   path: '/methodology',
@@ -72,9 +93,24 @@ const OptimizerRoute = OptimizerRouteImport.update({
   path: '/optimizer',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SimulatorRoute = SimulatorRouteImport.update({
   id: '/simulator',
   path: '/simulator',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TechnologyRoute = TechnologyRouteImport.update({
+  id: '/technology',
+  path: '/technology',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TwinRoute = TwinRouteImport.update({
@@ -90,29 +126,41 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/business': typeof BusinessRoute
   '/carbon': typeof CarbonRoute
+  '/contact': typeof ContactRoute
   '/demo': typeof DemoRoute
   '/financial': typeof FinancialRoute
   '/grid': typeof GridRoute
   '/hamilton': typeof HamiltonRoute
+  '/how-it-works': typeof HowItWorksRoute
   '/methodology': typeof MethodologyRoute
   '/optimizer': typeof OptimizerRoute
+  '/privacy': typeof PrivacyRoute
   '/simulator': typeof SimulatorRoute
+  '/technology': typeof TechnologyRoute
+  '/terms': typeof TermsRoute
   '/twin': typeof TwinRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/business': typeof BusinessRoute
   '/carbon': typeof CarbonRoute
+  '/contact': typeof ContactRoute
   '/demo': typeof DemoRoute
   '/financial': typeof FinancialRoute
   '/grid': typeof GridRoute
   '/hamilton': typeof HamiltonRoute
+  '/how-it-works': typeof HowItWorksRoute
   '/methodology': typeof MethodologyRoute
   '/optimizer': typeof OptimizerRoute
+  '/privacy': typeof PrivacyRoute
   '/simulator': typeof SimulatorRoute
+  '/technology': typeof TechnologyRoute
+  '/terms': typeof TermsRoute
   '/twin': typeof TwinRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
 }
@@ -120,15 +168,21 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/about': typeof AboutRoute
   '/business': typeof BusinessRoute
   '/carbon': typeof CarbonRoute
+  '/contact': typeof ContactRoute
   '/demo': typeof DemoRoute
   '/financial': typeof FinancialRoute
   '/grid': typeof GridRoute
   '/hamilton': typeof HamiltonRoute
+  '/how-it-works': typeof HowItWorksRoute
   '/methodology': typeof MethodologyRoute
   '/optimizer': typeof OptimizerRoute
+  '/privacy': typeof PrivacyRoute
   '/simulator': typeof SimulatorRoute
+  '/technology': typeof TechnologyRoute
+  '/terms': typeof TermsRoute
   '/twin': typeof TwinRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
 }
@@ -136,44 +190,62 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/about'
     | '/business'
     | '/carbon'
+    | '/contact'
     | '/demo'
     | '/financial'
     | '/grid'
     | '/hamilton'
+    | '/how-it-works'
     | '/methodology'
     | '/optimizer'
+    | '/privacy'
     | '/simulator'
+    | '/technology'
+    | '/terms'
     | '/twin'
     | '/dashboard'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/about'
     | '/business'
     | '/carbon'
+    | '/contact'
     | '/demo'
     | '/financial'
     | '/grid'
     | '/hamilton'
+    | '/how-it-works'
     | '/methodology'
     | '/optimizer'
+    | '/privacy'
     | '/simulator'
+    | '/technology'
+    | '/terms'
     | '/twin'
     | '/dashboard'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/about'
     | '/business'
     | '/carbon'
+    | '/contact'
     | '/demo'
     | '/financial'
     | '/grid'
     | '/hamilton'
+    | '/how-it-works'
     | '/methodology'
     | '/optimizer'
+    | '/privacy'
     | '/simulator'
+    | '/technology'
+    | '/terms'
     | '/twin'
     | '/_authenticated/dashboard'
   fileRoutesById: FileRoutesById
@@ -181,15 +253,21 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AboutRoute: typeof AboutRoute
   BusinessRoute: typeof BusinessRoute
   CarbonRoute: typeof CarbonRoute
+  ContactRoute: typeof ContactRoute
   DemoRoute: typeof DemoRoute
   FinancialRoute: typeof FinancialRoute
   GridRoute: typeof GridRoute
   HamiltonRoute: typeof HamiltonRoute
+  HowItWorksRoute: typeof HowItWorksRoute
   MethodologyRoute: typeof MethodologyRoute
   OptimizerRoute: typeof OptimizerRoute
+  PrivacyRoute: typeof PrivacyRoute
   SimulatorRoute: typeof SimulatorRoute
+  TechnologyRoute: typeof TechnologyRoute
+  TermsRoute: typeof TermsRoute
   TwinRoute: typeof TwinRoute
 }
 
@@ -209,6 +287,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/business': {
       id: '/business'
       path: '/business'
@@ -221,6 +306,13 @@ declare module '@tanstack/react-router' {
       path: '/carbon'
       fullPath: '/carbon'
       preLoaderRoute: typeof CarbonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/demo': {
@@ -251,6 +343,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HamiltonRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/how-it-works': {
+      id: '/how-it-works'
+      path: '/how-it-works'
+      fullPath: '/how-it-works'
+      preLoaderRoute: typeof HowItWorksRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/methodology': {
       id: '/methodology'
       path: '/methodology'
@@ -265,11 +364,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OptimizerRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/simulator': {
       id: '/simulator'
       path: '/simulator'
       fullPath: '/simulator'
       preLoaderRoute: typeof SimulatorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/technology': {
+      id: '/technology'
+      path: '/technology'
+      fullPath: '/technology'
+      preLoaderRoute: typeof TechnologyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/twin': {
@@ -303,15 +423,21 @@ const AuthenticatedRouteRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AboutRoute: AboutRoute,
   BusinessRoute: BusinessRoute,
   CarbonRoute: CarbonRoute,
+  ContactRoute: ContactRoute,
   DemoRoute: DemoRoute,
   FinancialRoute: FinancialRoute,
   GridRoute: GridRoute,
   HamiltonRoute: HamiltonRoute,
+  HowItWorksRoute: HowItWorksRoute,
   MethodologyRoute: MethodologyRoute,
   OptimizerRoute: OptimizerRoute,
+  PrivacyRoute: PrivacyRoute,
   SimulatorRoute: SimulatorRoute,
+  TechnologyRoute: TechnologyRoute,
+  TermsRoute: TermsRoute,
   TwinRoute: TwinRoute,
 }
 export const routeTree = rootRouteImport
