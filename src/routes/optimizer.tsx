@@ -7,13 +7,14 @@ import { PageHeader, Panel } from "@/components/pf/ui";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/optimizer")({
-  head: () => seo("Schedule Optimizer", "Compare traditional pump scheduling against PEAKFIVE's exact dynamic-programming schedule with independent validation."),
+  head: () => seo("Schedule Optimizer", "View PEAKFIVE FastAPI pumping schedules, backend solve quality, facility demand and reservoir validation."),
   component: Optimizer,
 });
 
 function Optimizer() {
-  const { baseline, opt, view, setView, config } = useSim();
+  const { baseline, opt, view, setView, config, mode, backendResult } = useSim();
   const o = opt?.feasible ? opt.plan : undefined;
+  if (mode === "backend") return <div className="space-y-5"><PageHeader title="Schedule Optimizer" sub="Actual FastAPI scheduling results · illustrative water system" right={<OptimizeButton />} /><InfeasiblePanel /><Playback /><Panel title="Peak-window demand" sub="Highest total site load inside the selected window; no independent baseline is available."><div className="num text-3xl text-primary">{backendResult?.coincident_kw_after?.toFixed(1) ?? "—"} <span className="text-sm">kW</span></div><p className="mt-2 text-sm text-muted-foreground">{backendResult?.status === "feasible_timeout" ? "Feasible — not proven optimal" : backendResult?.status === "optimal" ? "Proven optimal" : "Awaiting backend schedule"}</p></Panel><Panel title="Pump timelines">{o ? <Gantt combos={o.combos} levels={o.eval.levels} label="BACKEND SCHEDULE" /> : <p className="text-sm text-muted-foreground">No backend schedule available.</p>}</Panel><div className="grid gap-5 lg:grid-cols-2"><Panel title="Facility power-demand profile"><LoadChart /></Panel><Panel title="Backend explanation"><Explanation /></Panel></div>{o && <><ValidationPanel validation={o.validation} title="Returned schedule checks" /><Panel title="Schedule totals"><div className="num grid grid-cols-2 gap-4 text-sm"><div>Daily facility energy <b>{o.eval.dailyKwh.toFixed(1)} kWh</b></div><div>24:00 storage <b>{o.eval.finalLevel.toFixed(1)} m³</b></div></div><p className="mt-3 text-xs text-muted-foreground">No savings, costs or carbon reduction are claimed without an independent baseline and verified supporting data.</p></Panel>}</div>;
   const reduction = o ? baseline.eval.peakKwh - o.eval.peakKwh : 0;
   const avgKw = (k: number) => k / (config.peakEnd - config.peakStart);
   return (

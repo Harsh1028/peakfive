@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
+import { SimProvider } from "@/lib/sim-store";
+import { BackendSettings } from "@/components/pf/backend-controls";
 import { Presentation } from "lucide-react";
 import { seo } from "@/lib/seo";
 import { DemandChart, StorageChart } from "@/components/pf/charts";
@@ -28,6 +30,7 @@ function Overview() {
         </div>
       </div>
       <IllustrativeBanner />
+      <BackendSettings />
       <InfeasiblePanel />
       <KpiCards />
       <Playback />
@@ -43,7 +46,7 @@ function Overview() {
         <Panel className="xl:col-span-2" title="Pumping station"><PumpStation /></Panel>
         <Panel className="xl:col-span-3" title="Reservoir storage through the day"><StorageChart /></Panel>
       </div>
-      {demo && <DemoMode onClose={() => setDemo(false)} />}
+      {demo && <SimProvider initialMode="demo"><DemoMode onClose={() => setDemo(false)} /></SimProvider>}
     </div>
   );
 }

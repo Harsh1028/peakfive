@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { seo } from "@/lib/seo";
+import { BackendScenarios } from "@/components/pf/backend-controls";
 import { DEFAULT_CONFIG } from "@/lib/engine";
 import { useSim } from "@/lib/sim-store";
 import { StorageChart } from "@/components/pf/charts";
@@ -13,6 +14,7 @@ export const Route = createFileRoute("/scenarios")({
 
 function Scenarios() {
   const s = useSim();
+  if (s.mode === "backend") return <div className="space-y-5"><PageHeader title="Scenario Simulator: Break the System" sub="Illustrative pump and water parameters · backend-verified schedules" right={<OptimizeButton />} /><BackendScenarios /><InfeasiblePanel /><Panel title="Storage under this scenario"><StorageChart /></Panel>{s.opt?.feasible && s.opt.plan && <><Panel title="Backend schedule"><Gantt combos={s.opt.plan.combos} levels={s.opt.plan.eval.levels} label="ACTUAL BACKEND RESULT" /></Panel><ValidationPanel validation={s.opt.plan.validation} title="Returned schedule checks" /></>}</div>;
   const d = s.draft;
   const dirty = JSON.stringify(d) !== JSON.stringify(s.config);
   const o = s.opt?.feasible ? s.opt.plan : undefined;

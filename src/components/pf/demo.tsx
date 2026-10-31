@@ -30,6 +30,7 @@ export function DemoMode({ onClose }: { onClose: () => void }) {
           </div>
         </div>
 
+        <p className="mb-2 text-sm text-warning">Frontend-only demo simulation — not backend results</p>
         <h2 className="text-3xl font-semibold">{STAGES[i]}</h2>
         <div className="mt-6 space-y-5">
           {i === 0 && (<>

@@ -6,12 +6,12 @@ import { cn } from "@/lib/utils";
 import { Btn, Panel, Tag } from "./ui";
 
 export function IllustrativeBanner() {
-  const { dataset } = useSim();
-  if (dataset.source !== "ILLUSTRATIVE") return null;
+  const { dataset, mode } = useSim();
+  if (dataset.source !== "ILLUSTRATIVE" && mode === "demo") return null;
   return (
     <div className="mb-4 flex items-center gap-2 rounded-lg border border-warning/40 bg-warning/10 px-4 py-2.5 text-sm text-warning">
       <AlertTriangle className="h-4 w-4 shrink-0" />
-      Illustrative grid profile. Import official IESO data for historical analysis.
+      {mode === "backend" ? "Illustrative water system — not real utility data. Backend schedules are separate from IESO grid demand." : "Illustrative grid profile. Import official IESO data for historical analysis."}
     </div>
   );
 }
@@ -24,21 +24,21 @@ export function SourceBadge() {
 }
 
 export function KpiCards() {
-  const { dataset, active, step, baseline, opt, status, config } = useSim();
+  const { dataset, active, step, baseline, opt, status, config, mode, demand, capacity, hasSchedule, backendResult } = useSim();
   const hourMw = dataset.hourly[Math.floor(step / 4)];
   const level = active.eval.levels[step];
-  const served = DEMAND.slice(0, step + 1).reduce((a, b) => a + b, 0);
-  const total = DEMAND.reduce((a, b) => a + b, 0);
+  const served = demand.slice(0, step).reduce((a, b) => a + b, 0);
+  const total = demand.reduce((a, b) => a + b, 0);
   const violations = active.validation.checks.filter((c) => !c.pass).length;
   const o = opt?.feasible ? opt.plan : undefined;
   const reduction = o && baseline.validation.pass ? baseline.eval.peakKwh - o.eval.peakKwh : null;
   const statusTone = status === "Optimized" ? "text-success" : status === "Infeasible" ? "text-destructive" : status === "Baseline" ? "text-primary" : "text-warning";
   const cards = [
     { icon: Zap, label: "Ontario Demand", value: `${hourMw.toLocaleString()}`, unit: "MW", sub: `Hour ending ${Math.floor(step / 4) + 1} · ${dataset.source === "ILLUSTRATIVE" ? "illustrative" : "IESO"}` },
-    { icon: Gauge, label: "Pump Demand", value: `${active.eval.kw[step]}`, unit: "kW", sub: `${active === baseline ? "Baseline" : "Optimized"} schedule · ${stepLabel(step)}` },
-    { icon: Droplets, label: "Reservoir Level", value: `${level}`, unit: "m³", sub: `${Math.round((level / CAPACITY) * 100)}% of ${CAPACITY} m³` },
-    { icon: Activity, label: "Peak-Window Reduction", value: reduction === null ? "—" : reduction.toFixed(1), unit: reduction === null ? "" : "kWh", sub: reduction === null ? (baseline.validation.pass ? "Run the optimizer" : "Baseline infeasible: no claim") : `${String(config.peakStart).padStart(2, "0")}:00–${String(config.peakEnd).padStart(2, "0")}:00 vs baseline` },
-    { icon: Droplets, label: "Water Requirements", value: `${served}`, unit: `/ ${total} m³`, sub: `${total - served} m³ remaining · ${violations} violation${violations === 1 ? "" : "s"}` },
+    { icon: Gauge, label: mode === "backend" ? "Facility Demand" : "Pump Demand", value: hasSchedule ? `${active.eval.kw[step].toFixed(1)}` : "—", unit: "kW", sub: `${mode === "backend" ? hasSchedule ? "Backend" : "Awaiting backend" : active === baseline ? "Baseline" : "Optimized"} · ${stepLabel(step)}` },
+    { icon: Droplets, label: "Reservoir Level", value: hasSchedule ? level.toFixed(1) : "—", unit: "m³", sub: `${Math.round((level / capacity) * 100)}% of ${capacity} m³${hasSchedule ? "" : " · initial configuration"}` },
+    { icon: Activity, label: mode === "backend" ? "Peak-Window Demand" : "Peak-Window Reduction", value: mode === "backend" ? backendResult?.coincident_kw_after?.toFixed(1) ?? "—" : reduction === null ? "—" : reduction.toFixed(1), unit: mode === "backend" ? "kW" : reduction === null ? "" : "kWh", sub: mode === "backend" ? "Maximum site load · no baseline savings claim" : reduction === null ? "Run the optimizer" : "vs demo baseline" },
+    { icon: Droplets, label: "Water Requirements", value: hasSchedule ? served.toFixed(1) : "—", unit: `/ ${total.toFixed(1)} m³`, sub: `${(total - served).toFixed(1)} m³ remaining · ${violations} violation${violations === 1 ? "" : "s"}` },
     { icon: ShieldCheck, label: "Optimization Status", value: status, unit: "", sub: opt ? `Last run ${new Date(opt.ranAt).toLocaleTimeString()}` : "No optimization run yet", tone: statusTone },
   ];
   return (
@@ -55,25 +55,25 @@ export function KpiCards() {
 }
 
 export function Playback() {
-  const { step, setStep, playing, setPlaying, speed, setSpeed, view, setView, opt } = useSim();
+  const { step, setStep, playing, setPlaying, speed, setSpeed, view, setView, opt, mode, hasSchedule } = useSim();
   return (
     <div className="panel flex flex-wrap items-center gap-3 p-3">
       <div className="flex gap-1">
         <Btn size="icon" aria-label="Restart" onClick={() => { setPlaying(false); setStep(0); }}><RotateCcw className="h-4 w-4" /></Btn>
         <Btn size="icon" aria-label="Step backward" onClick={() => setStep(step - 1)}><ChevronLeft className="h-4 w-4" /></Btn>
-        <Btn size="icon" variant="primary" aria-label={playing ? "Pause" : "Play"} onClick={() => { if (step >= 95) setStep(0); setPlaying(!playing); }}>
+        <Btn size="icon" variant="primary" aria-label={playing ? "Pause" : "Play"} disabled={!hasSchedule} onClick={() => { if (step >= 95) setStep(0); setPlaying(!playing); }}>
           {playing ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
         </Btn>
         <Btn size="icon" aria-label="Step forward" onClick={() => setStep(step + 1)}><ChevronRight className="h-4 w-4" /></Btn>
       </div>
       <span className="num w-12 text-sm font-semibold text-primary">{stepLabel(step)}</span>
-      <input type="range" min={0} max={95} value={step} onChange={(e) => setStep(Number(e.target.value))} className="min-w-40 flex-1" aria-label="Simulation time" />
+      <input type="range" min={0} max={95} value={step} onChange={(e) => setStep(Number(e.target.value))} className="min-w-40 flex-1" aria-label="Simulation time" disabled={!hasSchedule} />
       <div className="flex gap-1">
         {[1, 4, 12, 24].map((s) => <Btn key={s} size="sm" variant={speed === s ? "active" : "ghost"} onClick={() => setSpeed(s)}>{s}×</Btn>)}
       </div>
       <div className="flex gap-1">
-        <Btn size="sm" variant={view === "baseline" ? "active" : "ghost"} onClick={() => setView("baseline")}>Baseline</Btn>
-        <Btn size="sm" variant={view === "optimized" ? "active" : "ghost"} disabled={!opt?.feasible} onClick={() => setView("optimized")}>Optimized</Btn>
+        {mode === "demo" && <Btn size="sm" variant={view === "baseline" ? "active" : "ghost"} onClick={() => setView("baseline")}>Demo baseline</Btn>}
+        <Btn size="sm" variant={view === "optimized" ? "active" : "ghost"} disabled={!opt?.feasible} onClick={() => setView("optimized")}>{mode === "backend" ? "Backend schedule" : "Demo optimized"}</Btn>
       </div>
     </div>
   );
@@ -115,21 +115,23 @@ export function ValidationPanel({ validation, title = "Independent constraint ch
 }
 
 export function InfeasiblePanel() {
-  const { opt, baseline } = useSim();
+  const { opt, baseline, mode, backendResult } = useSim();
   const msgs: string[] = [];
   if (opt && !opt.feasible && opt.reason) msgs.push(opt.reason);
-  if (!baseline.validation.pass) msgs.push(`The rule-based baseline violates constraints (${baseline.validation.checks.filter((c) => !c.pass).map((c) => c.name).join(", ")}). No improvement is claimed against it.`);
+  if (mode === "demo" && !baseline.validation.pass) msgs.push(`The rule-based baseline violates constraints (${baseline.validation.checks.filter((c) => !c.pass).map((c) => c.name).join(", ")}). No improvement is claimed against it.`);
+  if (mode === "backend" && backendResult?.status === "feasible_timeout") return <div className="rounded-lg border border-warning/40 bg-warning/10 p-4 text-sm text-warning">Feasible schedule — not proven optimal. {backendResult.explanation}</div>;
   if (!msgs.length) return null;
   return (
     <div className="rounded-xl border border-destructive/50 bg-destructive/10 p-4">
-      <div className="flex items-center gap-2 font-semibold text-destructive"><AlertTriangle className="h-4 w-4" />No valid schedule</div>
+      <div className="flex items-center gap-2 font-semibold text-destructive"><AlertTriangle className="h-4 w-4" />{mode === "backend" ? backendResult?.status === "timeout_no_solution" ? "Feasibility remains unknown" : backendResult?.status === "invalid_input" ? "Invalid scenario inputs" : backendResult?.status === "infeasible" ? "Infeasible scenario" : "Backend request failed" : "No valid schedule"}</div>
       {msgs.map((m) => <p key={m} className="mt-1.5 text-sm text-foreground/90">{m}</p>)}
     </div>
   );
 }
 
 export function Explanation() {
-  const { baseline, opt, config } = useSim();
+  const { baseline, opt, config, mode, backendResult } = useSim();
+  if (mode === "backend") return <p className="text-sm text-muted-foreground">{backendResult?.explanation ?? "No backend optimization run yet."}</p>;
   if (!opt?.feasible || !opt.plan) return <p className="text-sm text-muted-foreground">Run the optimizer to see which pumping periods move and why.</p>;
   return (
     <ul className="space-y-2 text-sm">
@@ -139,11 +141,11 @@ export function Explanation() {
 }
 
 export function Gantt({ combos, levels, label }: { combos: Combo[]; levels: number[]; label: string }) {
-  const { config, step, setStep } = useSim();
+  const { config, step, setStep, pumps, capacity, demand, mode, backendResult } = useSim();
   const rows = [
-    ...PUMPS.map((p, i) => ({ name: p.name.replace("High-Lift ", ""), cell: (t: number) => <div className={cn("h-full w-full", combos[t] & (1 << i) ? "bg-success" : "bg-idle/40")} /> })),
-    { name: "Reservoir", cell: (t: number) => <div className="flex h-full w-full items-end"><div className="w-full bg-water" style={{ height: `${(levels[t + 1] / CAPACITY) * 100}%` }} /></div> },
-    { name: "Demand", cell: (t: number) => <div className="flex h-full w-full items-end"><div className="w-full bg-warning/70" style={{ height: `${(DEMAND[t] / 16) * 100}%` }} /></div> },
+    ...pumps.map((p, i) => ({ name: p.name.replace("High-Lift ", ""), cell: (t: number) => <div className={cn("h-full w-full", (mode === "backend" ? backendResult?.schedule[t]?.pumps_on.includes(p.id) : combos[t] & (1 << i)) ? "bg-success" : "bg-idle/40")} /> })),
+    { name: "Reservoir", cell: (t: number) => <div className="flex h-full w-full items-end"><div className="w-full bg-water" style={{ height: `${(levels[t] / capacity) * 100}%` }} /></div> },
+    { name: "Demand", cell: (t: number) => <div className="flex h-full w-full items-end"><div className="w-full bg-warning/70" style={{ height: `${(demand[t] / Math.max(1, ...demand)) * 100}%` }} /></div> },
   ];
   return (
     <div>
@@ -155,7 +157,7 @@ export function Gantt({ combos, levels, label }: { combos: Combo[]; levels: numb
             <div className="relative flex h-6 flex-1 overflow-hidden rounded">
               {Array.from({ length: 96 }, (_, t) => (
                 <button key={t} type="button" aria-label={stepLabel(t)} onClick={() => setStep(t)}
-                  className={cn("relative h-full flex-1 border-r border-background/40", t >= config.peakStart * 4 && t < config.peakEnd * 4 && "ring-1 ring-inset ring-destructive/60", t === step && "outline outline-2 outline-foreground z-10")}>
+                  className={cn("relative h-full flex-1 border-r border-background/40", (config.peakStart <= config.peakEnd ? t >= config.peakStart * 4 && t < config.peakEnd * 4 : t >= config.peakStart * 4 || t < config.peakEnd * 4) && "ring-1 ring-inset ring-destructive/60", t === step && "outline outline-2 outline-foreground z-10")}>
                   {r.cell(t)}
                 </button>
               ))}

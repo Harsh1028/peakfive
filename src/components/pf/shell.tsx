@@ -5,6 +5,7 @@ import { useSim } from "@/lib/sim-store";
 import { cn } from "@/lib/utils";
 import { SourceBadge } from "./panels";
 import { Tag } from "./ui";
+import { BackendConnection } from "./backend-controls";
 
 const NAV = [
   { to: "/", label: "Overview Dashboard", icon: LayoutDashboard },
@@ -52,7 +53,8 @@ export function AppShell({ children }: { children: ReactNode }) {
           <div className="ml-auto flex flex-wrap items-center gap-2">
             <Tag tone="muted"><span className="num">{dataset.date}</span></Tag>
             <SourceBadge />
-            <Tag tone="info"><span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse-dot" />Demo Mode</Tag>
+            <Tag tone="info"><span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse-dot" />Illustrative water system</Tag>
+            <BackendConnection />
           </div>
         </header>
         <main className="flex-1 px-4 py-6 md:px-8">{children}</main>

@@ -1,19 +1,20 @@
-import { CAPACITY, comboFlow, DEMAND, PUMPS, stepLabel } from "@/lib/engine";
+import { stepLabel } from "@/lib/engine";
 import { useSim } from "@/lib/sim-store";
 import { cn } from "@/lib/utils";
 
 export function Tank({ size = "lg" }: { size?: "lg" | "sm" }) {
-  const { active, step, config } = useSim();
+  const { active, step, config, capacity, demand, hasSchedule } = useSim();
+  if (!hasSchedule) return <div className="flex h-72 items-center justify-center text-sm text-muted-foreground">Awaiting a backend schedule · initial storage {config.initial} m³</div>;
   const level = active.eval.levels[step];
   const next = active.eval.levels[step + 1];
-  const pct = level / CAPACITY;
-  const inflow = comboFlow(active.combos[step]);
-  const out = DEMAND[step];
+  const pct = level / capacity;
+  const inflow = active.eval.pumped[step];
+  const out = demand[step];
   const state = next > level ? "Filling" : next < level ? "Draining" : "Stable";
   const H = 260, top = 20;
   const y = top + H * (1 - pct);
-  const reserveY = top + H * (1 - config.minReserve / CAPACITY);
-  const targetY = top + H * (1 - config.finalTarget / CAPACITY);
+  const reserveY = top + H * (1 - config.minReserve / capacity);
+  const targetY = top + H * (1 - config.finalTarget / capacity);
   const wave = "M0 8 Q 25 0 50 8 T 100 8 T 150 8 T 200 8 T 250 8 T 300 8 T 350 8 T 400 8 V 400 H 0 Z";
   return (
     <div className={cn("flex items-center gap-5", size === "sm" && "gap-3")}>
@@ -36,12 +37,12 @@ export function Tank({ size = "lg" }: { size?: "lg" | "sm" }) {
         <line x1="20" x2="180" y1={targetY} y2={targetY} stroke="var(--warning)" strokeDasharray="2 4" strokeWidth="1.2" />
         <text x="24" y={targetY - 4} fontSize="9" fill="var(--warning)">TARGET {config.finalTarget}</text>
         <text x="100" y="150" textAnchor="middle" fontSize="34" fontWeight="700" fill="var(--foreground)" fontFamily="var(--font-mono)">{Math.round(pct * 100)}%</text>
-        <text x="100" y="170" textAnchor="middle" fontSize="11" fill="var(--foreground)" opacity="0.8">{level} / {CAPACITY} m³</text>
+        <text x="100" y="170" textAnchor="middle" fontSize="11" fill="var(--foreground)" opacity="0.8">{level.toFixed(1)} / {capacity} m³</text>
       </svg>
       <dl className="space-y-3 text-sm">
         <Stat label="State" value={state} tone={state === "Filling" ? "text-success" : state === "Draining" ? "text-warning" : "text-muted-foreground"} />
-        <Stat label="Inflow" value={`+${inflow} m³ / 15 min`} tone="text-primary" />
-        <Stat label="Outflow (demand)" value={`−${out} m³ / 15 min`} tone="text-warning" />
+        <Stat label="Inflow" value={`+${inflow.toFixed(1)} m³ / 15 min`} tone="text-primary" />
+        <Stat label="Outflow (demand)" value={`−${out.toFixed(1)} m³ / 15 min`} tone="text-warning" />
         <Stat label="Time" value={stepLabel(step)} />
       </dl>
     </div>
@@ -58,13 +59,13 @@ function Stat({ label, value, tone }: { label: string; value: string; tone?: str
 }
 
 export function PumpStation() {
-  const { active, step, config } = useSim();
+  const { active, step, config, pumps, hasSchedule, mode, backendResult, events } = useSim();
   const c = active.combos[step];
   return (
     <div className="grid gap-3">
-      {PUMPS.map((p, i) => {
-        const on = !!(c & (1 << i));
-        const avail = i === 0 ? config.pump1 : config.pump2;
+      {pumps.map((p, i) => {
+        const on = hasSchedule && (mode === "backend" ? !!backendResult?.schedule[step]?.pumps_on.includes(p.id) : !!(c & (1 << i)));
+        const avail = p.available && !events.some((e) => e.type === "pump_outage" && e.pump_id === p.id && step >= e.start_slot && step < e.end_slot);
         return (
           <div key={p.id} className="flex items-center gap-4 rounded-lg border border-border bg-background/50 p-3">
             <svg viewBox="0 0 60 60" className="h-14 w-14 shrink-0">
@@ -89,7 +90,7 @@ export function PumpStation() {
               </svg>
             </div>
             <div className="text-right">
-              <div className={cn("num text-lg font-semibold", on ? "text-success" : "text-muted-foreground")}>{on ? p.kw : 0}</div>
+              <div className={cn("num text-lg font-semibold", on ? "text-success" : "text-muted-foreground")}>{hasSchedule ? on ? p.kw : 0 : "—"}</div>
               <div className="text-[10px] uppercase text-muted-foreground">kW</div>
             </div>
           </div>

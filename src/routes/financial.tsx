@@ -14,7 +14,7 @@ export const Route = createFileRoute("/financial")({
 const cad = (n: number) => n.toLocaleString("en-CA", { style: "currency", currency: "CAD", maximumFractionDigits: 0 });
 
 function Financial() {
-  const { baseline, opt, config } = useSim();
+  const { baseline, opt, config, mode, backendResult } = useSim();
   const [spend, setSpend] = useState(500000);
   const [rate, setRate] = useState(8);
   const [sub, setSub] = useState(15000);
@@ -61,6 +61,7 @@ function Financial() {
         <p className="mt-3 text-xs text-warning">Hypothetical customer scenario. Not a measured PEAKFIVE saving or verified tariff forecast.</p>
       </Panel>
 
+      {mode === "backend" ? <Panel title="B · Backend peak demand" sub="No financial savings estimate: the backend provides no independent baseline or tariff."><div className="num text-2xl">{backendResult?.coincident_kw_after?.toFixed(1) ?? "—"} kW</div><p className="mt-2 text-sm text-muted-foreground">Optimized maximum site demand inside the selected peak window.</p></Panel> : <>
       <Panel title="B · Scheduling analysis" sub="Bill difference from your entered tariff and the two pump-load profiles. Ontario MW demand is never used as a price.">
         <div className="grid gap-4 md:grid-cols-4">
           <label className="text-xs text-muted-foreground">Price outside window (CAD/kWh)<input className="field num mt-1 w-full" type="number" step="0.001" value={offPeak} onChange={(e) => setOffPeak(e.target.value)} placeholder="e.g. 0.10" /></label>
@@ -75,6 +76,8 @@ function Financial() {
               <div className="num grid grid-cols-3 gap-3"><div><div className="text-xs text-muted-foreground">Baseline / day</div><div className="text-lg">${b.toFixed(2)}</div></div><div><div className="text-xs text-muted-foreground">Optimized / day</div><div className="text-lg">${c.toFixed(2)}</div></div><div><div className="text-xs text-muted-foreground">Difference / day</div><div className={`text-lg ${b - c >= 0 ? "text-success" : "text-destructive"}`}>${(b - c).toFixed(2)}</div></div></div>); })()}
         </div>
       </Panel>
+
+      </>}
 
       <Panel title="C · ICI scenario (advanced, optional)" right={<Tag tone="muted">Enter validated parameters</Tag>}>
         <p className="mb-4 max-w-3xl text-sm text-muted-foreground">Class A Global Adjustment allocation depends on participation, eligibility and contribution during Ontario’s actual five coincident peak hours. PEAKFIVE does not assume a municipality qualifies, and the risk window above is not the five actual annual peaks.</p>
