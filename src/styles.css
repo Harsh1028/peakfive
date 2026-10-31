@@ -130,7 +130,7 @@
 
 @layer base {
   body { font-family: var(--font-sans); background-image: var(--gradient-glow); background-repeat: no-repeat; }
-  h1, h2, h3 { font-family: var(--font-display); letter-spacing: -0.01em; }
+  h1, h2, h3 { font-family: var(--font-display); letter-spacing: 0; }
   input[type="range"] { accent-color: var(--primary); }
 }
 
@@ -160,3 +160,11 @@
 @utility animate-spin-slow { animation: spin-slow 1.2s linear infinite; }
 @utility animate-flow { animation: flow 0.6s linear infinite; }
 @utility animate-pulse-dot { animation: pulse-dot 1.6s ease-in-out infinite; }
+
+.site-hero { position: relative; min-height: 580px; max-height: 760px; height: 76vh; display: flex; align-items: center; overflow: hidden; }
+.site-hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, color-mix(in oklab, var(--background) 92%, transparent), color-mix(in oklab, var(--background) 55%, transparent) 55%, color-mix(in oklab, var(--background) 18%, transparent)); }
+.site-hero img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.site-band { padding: 80px 20px; }
+.site-inner { max-width: 1180px; margin-inline: auto; }
+@media (max-width: 640px) { .site-hero { min-height: 570px; height: 78vh; } .site-band { padding-block: 52px; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }

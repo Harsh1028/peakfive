@@ -6,6 +6,7 @@ import {
   useRouter,
   HeadContent,
   Scripts,
+  useRouterState,
   type ErrorComponentProps,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
@@ -15,6 +16,8 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { SimProvider } from "../lib/sim-store";
 import { AppShell } from "../components/pf/shell";
 import { CarbonProvider } from "../lib/carbon-store";
+import { AuthProvider, useAuth } from "@/lib/auth-store";
+import { PublicShell } from "@/components/site/public-shell";
 
 function NotFoundComponent() {
   return (
@@ -129,14 +132,15 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <SimProvider>
-        <CarbonProvider>
-          <AppShell>
-            <Outlet />
-          </AppShell>
-        </CarbonProvider>
-      </SimProvider>
+      <AuthProvider><SiteContent /></AuthProvider>
     </QueryClientProvider>
   );
+}
+
+function SiteContent() {
+  const path = useRouterState({ select: (s) => s.location.pathname });
+  const auth = useAuth();
+  const engineering = ["/demo", "/dashboard", "/scenarios", "/settings", "/simulator", "/grid", "/twin", "/optimizer", "/carbon", "/financial", "/hamilton", "/business", "/methodology"].includes(path);
+  if (!engineering) return <PublicShell><Outlet /></PublicShell>;
+  return <SimProvider key={auth.identity}><CarbonProvider><AppShell><Outlet /></AppShell></CarbonProvider></SimProvider>;
 }
