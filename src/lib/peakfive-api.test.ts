@@ -73,6 +73,14 @@ describe("FastAPI contract", () => {
   it("includes 30 kW essential load", () => {
     expect(DEFAULT_SYSTEM.base_load_kw).toBe(30);
   });
+  it("preserves the Hamilton-inspired synthetic 24-hour profile at approximately 1817 m³", () => {
+    expect(DEFAULT_SYSTEM.slot_minutes).toBe(15);
+    expect(DEFAULT_SYSTEM.demand_m3_per_slot).toHaveLength(96);
+    expect(DEFAULT_SYSTEM.demand_m3_per_slot.reduce((a, b) => a + b, 0)).toBeCloseTo(1817.044, 3);
+  });
+  it("preserves the Hamilton-inspired 450 m³ storage floor", () => {
+    expect(DEFAULT_SYSTEM.tank.min_operating_m3 + DEFAULT_SYSTEM.tank.fire_reserve_m3).toBe(450);
+  });
   it("requires exactly 96 demand values", () => {
     expect(validateRequest(request()).system.demand_m3_per_slot).toHaveLength(96);
     const r = request();

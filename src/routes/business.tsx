@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Bar, CartesianGrid, ComposedChart, Line, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { seo } from "@/lib/seo";
 import { PageHeader, Panel, Tag } from "@/components/pf/ui";
+import { MunicipalPilot } from "@/components/pf/hamilton";
 
 export const Route = createFileRoute("/business")({
   head: () => seo("Business Model", "PEAKFIVE's subscription model, target Ontario utilities and an illustrative five-year revenue scenario."),
@@ -17,6 +18,7 @@ function Business() {
   return (
     <div className="space-y-5">
       <PageHeader title="Business Model" sub="Explainable, operator-approved pumping recommendations for Ontario municipal water utilities." />
+      <MunicipalPilot />
       <div className="grid gap-5 md:grid-cols-2">
         <Panel title="Problem"><p className="text-sm text-muted-foreground">Municipal water infrastructure needs reliable pumping, but electricity operating costs can be substantial — especially during high-demand grid hours.</p></Panel>
         <Panel title="Solution"><p className="text-sm text-muted-foreground">PEAKFIVE recommends pumping schedules that operators review and approve. Every plan is independently checked against storage, demand and equipment constraints.</p></Panel>

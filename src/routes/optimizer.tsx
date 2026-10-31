@@ -12,6 +12,7 @@ import {
 } from "@/components/pf/panels";
 import { PageHeader, Panel } from "@/components/pf/ui";
 import { cn } from "@/lib/utils";
+import { HamiltonStrategy } from "@/components/pf/hamilton";
 
 export const Route = createFileRoute("/optimizer")({
   head: () =>
@@ -33,6 +34,7 @@ function Optimizer() {
           sub="Actual FastAPI scheduling results · illustrative water system"
           right={<OptimizeButton />}
         />
+        <HamiltonStrategy />
         <InfeasiblePanel />
         <Playback />
         <Panel
