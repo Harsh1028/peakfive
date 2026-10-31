@@ -14,6 +14,7 @@ const STAGES = ["Hamilton's Challenge", "Our Simulated System", "Intelligent Sch
 export function HamiltonDemo({ onClose }: { onClose: () => void }) {
   const [stage, setStage] = useState(0);
   const s = useSim();
+  useEffect(() => { document.getElementById("hamilton-demo")?.scrollTo({ top: 0 }); }, [stage]);
   useEffect(() => {
     const previous = document.activeElement;
     const overflow = document.body.style.overflow;

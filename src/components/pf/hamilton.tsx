@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { ArrowRight, CheckCircle2, Database, Droplets, Gauge, Info, MapPin, Waves, Zap } from "lucide-react";
 import { useSim } from "@/lib/sim-store";
 import { Btn, Tag } from "./ui";
@@ -13,25 +13,27 @@ export function HamiltonFacts() {
       <div><h2 id="hamilton-facts" className="text-lg font-semibold">Hamilton's Water Infrastructure</h2><p className="mt-1 text-xs text-muted-foreground">Published municipal context — not live measurements or specifications of our simulated subsystem.</p></div>
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         {[
-          { icon: Gauge, value: "24", label: "Water Pumping Stations", period: "Historical · 2024 water budget" },
-          { icon: Waves, value: "13", label: "Underground Reservoirs", period: "Historical · 2024 water budget" },
-          { icon: Droplets, value: "7", label: "Water Towers", period: "Historical · 2024 water budget" },
+          { icon: Gauge, value: "24", label: "Water Pumping Stations", period: "Provided 2024 budget figure · verification pending" },
+          { icon: Waves, value: "13", label: "Underground Reservoirs", period: "Provided 2024 budget figure · verification pending" },
+          { icon: Droplets, value: "7", label: "Water Towers", period: "Provided 2024 budget figure · verification pending" },
           { icon: Zap, value: "909,000", label: "m³/day · Woodward Water Treatment Facility rated capacity", period: "Published rated capacity · not model demand" },
         ].map(({ icon: Icon, value, label, period }) => <article key={label} className="rounded-lg border border-border bg-card p-4"><Icon className="mb-3 h-4 w-4 text-primary" /><div className="num text-xl font-semibold text-primary">{value}</div><h3 className="mt-1 text-sm font-medium">{label}</h3><p className="mt-2 text-[11px] text-muted-foreground">{period}</p></article>)}
       </div>
       <div className="flex flex-wrap gap-x-5 gap-y-2 text-xs"><a href={BUDGET_URL} target="_blank" rel="noreferrer" className="text-primary underline">City of Hamilton · 2024 rate budget ↗</a><a href={WATER_URL} target="_blank" rel="noreferrer" className="text-primary underline">City of Hamilton · Drinking-water system ↗</a></div>
+      <p className="text-xs text-warning">The three network counts are supplied in the case-study brief and await confirmation against the official 2024 water-budget slides. Woodward's rated capacity is confirmed on the City's drinking-water page.</p>
     </section>
   );
 }
 
 export function HamiltonOverview() {
+  const navigate = useNavigate();
   return (
     <section className="space-y-4 border-l-2 border-primary bg-primary/5 px-5 py-5">
       <Tag tone="info"><MapPin className="h-3 w-3" />Hamilton, Ontario | Illustrative Pilot Scenario</Tag>
       <h2 className="text-xl font-semibold">Hamilton Municipal Water Case Study</h2>
       <p className="text-sm text-foreground">Exploring how intelligent pump scheduling could support municipal water infrastructure in Hamilton, Ontario.</p>
       <p className="max-w-4xl text-sm text-muted-foreground">Hamilton operates an extensive drinking-water infrastructure network. PEAKFIVE demonstrates how a hypothetical pumping subsystem could use reservoir storage to shift flexible electricity demand away from selected peak-risk periods.</p>
-      <div className="flex flex-wrap items-center gap-4"><Link to="/twin"><Btn size="sm">Explore Hamilton Scenario<ArrowRight className="h-4 w-4" /></Btn></Link><p className="text-xs text-muted-foreground">Prospective example municipality — no partnership, confirmed pilot or access to City infrastructure.</p></div>
+      <div className="flex flex-wrap items-center gap-4"><Btn size="sm" onClick={() => navigate({ to: "/twin" })}>Explore Hamilton Scenario<ArrowRight className="h-4 w-4" /></Btn><p className="text-xs text-muted-foreground">Prospective example municipality — no partnership, confirmed pilot or access to City infrastructure.</p></div>
     </section>
   );
 }
@@ -42,7 +44,7 @@ export function HamiltonTransparency() {
       <h2 className="flex items-center gap-2 text-base font-semibold"><Info className="h-4 w-4 text-primary" />About This Demonstration</h2>
       <p className="text-sm text-muted-foreground">Real-world context comes from published City of Hamilton infrastructure information and Ontario electricity data where verified. Pump specifications, reservoir capacity and water requirements are simulated. Pumping schedules are calculated by the PEAKFIVE optimization engine.</p>
       <div className="grid gap-4 md:grid-cols-3">{[
-        { icon: Database, title: "Verified Public Data", text: "Hamilton infrastructure statistics and confirmed IESO measurements. An illustrative grid profile is not verified IESO data." },
+        { icon: Database, title: "Verified Public Data", text: "Confirmed City infrastructure information and IESO measurements. Pending budget figures and illustrative grid profiles are not verified data." },
         { icon: Droplets, title: "Simulated Water System", text: "Pump specifications, reservoir storage and community water-demand profile — not Hamilton equipment." },
         { icon: CheckCircle2, title: "Calculated Results", text: "Pump schedules, electrical consumption and reservoir levels generated by the Python optimization engine." },
       ].map(({ icon: Icon, title, text }) => <div key={title}><h3 className="flex items-center gap-2 text-sm font-medium"><Icon className="h-4 w-4 shrink-0 text-primary" />{title}</h3><p className="mt-2 text-xs text-muted-foreground">{text}</p></div>)}</div>
