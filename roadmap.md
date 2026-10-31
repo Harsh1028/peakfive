@@ -1,5 +1,11 @@
 # PEAKFIVE backend integration
 
+## PEAKFIVE AI
+- [ ] Add branded site-wide streaming assistant and thread URLs, saved owner-only account history and temporary guest chat.
+- [ ] Ground read-only explanations in current page, validated FastAPI results, source-labelled grid/Hamilton/carbon data; add Explain action.
+- [ ] Add approved AI-only usage controls and safe terminal error handling without changing optimizer or Climatiq.
+- [ ] Test real AI follow-ups, live schedule context, guest/auth ownership, Stop, error states and desktop/mobile chat.
+
 ## SaaS transformation
 - [x] Plan public homepage, real accounts, private dashboard and saved scenarios while preserving public live optimization.
 - [x] Add public navigation, homepage/content/legal draft pages and unrestricted /demo.
