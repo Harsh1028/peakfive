@@ -40,6 +40,83 @@ export type Database = {
           },
         ]
       }
+      ai_access_blocks: {
+        Row: {
+          created_at: string
+          reason: string
+          scope: string
+          status: number
+        }
+        Insert: {
+          created_at?: string
+          reason: string
+          scope: string
+          status: number
+        }
+        Update: {
+          created_at?: string
+          reason?: string
+          scope?: string
+          status?: number
+        }
+        Relationships: []
+      }
+      ai_conversations: {
+        Row: {
+          created_at: string
+          id: string
+          messages: Json
+          revision: number
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          messages?: Json
+          revision?: number
+          title?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          messages?: Json
+          revision?: number
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_conversations_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ai_usage: {
+        Row: {
+          day: string
+          requests: number
+          scope: string
+        }
+        Insert: {
+          day?: string
+          requests?: number
+          scope: string
+        }
+        Update: {
+          day?: string
+          requests?: number
+          scope?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -104,7 +181,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      reserve_ai_request: {
+        Args: { p_authenticated: boolean; p_scope: string }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never
