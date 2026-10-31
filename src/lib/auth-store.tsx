@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "@tanstack/react-router";
 import type { User } from "@supabase/supabase-js";
@@ -14,6 +14,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [identity, setIdentity] = useState(0);
+  const lastUser = useRef<string | null>(null);
   const query = useQueryClient();
   const router = useRouter();
   useEffect(() => {
@@ -21,6 +22,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     void supabase.auth.getUser().then(({ data }) => {
       if (alive) {
         setUser(data.user);
+        lastUser.current = data.user?.id ?? null;
         setLoading(false);
       }
     });
@@ -32,7 +34,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (!["SIGNED_IN", "SIGNED_OUT", "USER_UPDATED", "PASSWORD_RECOVERY"].includes(event)) return;
       setUser(session?.user ?? null);
       setLoading(false);
-      if (event === "SIGNED_IN" || event === "SIGNED_OUT") {
+      if ((event === "SIGNED_IN" || event === "SIGNED_OUT") && lastUser.current !== (session?.user.id ?? null)) {
+        lastUser.current = session?.user.id ?? null;
         void query.cancelQueries();
         query.clear();
         setIdentity((n) => n + 1);

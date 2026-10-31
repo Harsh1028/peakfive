@@ -228,6 +228,7 @@
   align-items: center;
   overflow: hidden;
 }
+.site-hero .site-inner { padding-block: 48px 74px; }
 .site-hero::after {
   content: "";
   position: absolute;
@@ -256,7 +257,8 @@
 @media (max-width: 640px) {
   .site-hero {
     min-height: 570px;
-    height: 78vh;
+    height: auto;
+    max-height: none;
   }
   .site-band {
     padding-block: 52px;
