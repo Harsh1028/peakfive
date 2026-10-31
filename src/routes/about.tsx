@@ -1,3 +1,4 @@
+import { TeamSection } from "@/components/site/team";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { seo } from "@/lib/seo";
 export const Route = createFileRoute("/about")({
@@ -25,11 +26,7 @@ function Page() {
           </p>
         </section>
         <section className="border-t border-border py-8">
-          <h2 className="text-xl font-semibold">The team</h2>
-          <p className="mt-3 leading-relaxed text-muted-foreground">
-            Three team members. Names, roles and biographies have not yet been supplied and are
-            intentionally not invented.
-          </p>
+          <TeamSection />
         </section>
         <section className="border-t border-border py-8">
           <h2 className="text-xl font-semibold">Our approach</h2>
