@@ -1,4 +1,36 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { seo } from "@/lib/seo";
-export const Route = createFileRoute("/contact")({ head:()=>seo("Contact PEAKFIVE","Contact details are awaiting confirmation."), component: Page });
-function Page(){return <div className="site-band"><div className="mx-auto max-w-4xl"><p className="text-xs uppercase tracking-widest text-primary">PEAKFIVE</p><h1 className="mt-4 text-4xl font-semibold">Contact PEAKFIVE</h1><p className="my-8 text-lg text-muted-foreground">Contact details are awaiting confirmation.</p><section className="border-t border-border py-8"><h2 className="text-xl font-semibold">Contact details pending</h2><p className="mt-3 leading-relaxed text-muted-foreground">No monitored email address or telephone number has been supplied. This page does not accept messages or imply a working contact channel.</p></section><section className="border-t border-border py-8"><h2 className="text-xl font-semibold">Existing account</h2><p className="mt-3 leading-relaxed text-muted-foreground">Account settings include a private account-deletion request. Requests require an operational review process before they can be completed.</p></section><Link to="/demo" className="text-primary">Explore the live demonstration →</Link></div></div>;}
+export const Route = createFileRoute("/contact")({
+  head: () => seo("Contact PEAKFIVE", "Contact details are awaiting confirmation."),
+  component: Page,
+});
+function Page() {
+  return (
+    <div className="site-band">
+      <div className="mx-auto max-w-4xl">
+        <p className="text-xs uppercase tracking-widest text-primary">PEAKFIVE</p>
+        <h1 className="mt-4 text-4xl font-semibold">Contact PEAKFIVE</h1>
+        <p className="my-8 text-lg text-muted-foreground">
+          Contact details are awaiting confirmation.
+        </p>
+        <section className="border-t border-border py-8">
+          <h2 className="text-xl font-semibold">Contact details pending</h2>
+          <p className="mt-3 leading-relaxed text-muted-foreground">
+            No monitored email address or telephone number has been supplied. This page does not
+            accept messages or imply a working contact channel.
+          </p>
+        </section>
+        <section className="border-t border-border py-8">
+          <h2 className="text-xl font-semibold">Existing account</h2>
+          <p className="mt-3 leading-relaxed text-muted-foreground">
+            Account settings include a private account-deletion request. Requests require an
+            operational review process before they can be completed.
+          </p>
+        </section>
+        <Link to="/demo" className="text-primary">
+          Explore the live demonstration →
+        </Link>
+      </div>
+    </div>
+  );
+}

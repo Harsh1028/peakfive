@@ -1,4 +1,57 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { seo } from "@/lib/seo";
-export const Route = createFileRoute("/privacy")({ head:()=>seo("Privacy Policy · Draft","Draft placeholder pending legal review; not a finalized privacy policy."), component: Page });
-function Page(){return <div className="site-band"><div className="mx-auto max-w-4xl"><p className="text-xs uppercase tracking-widest text-primary">PEAKFIVE</p><h1 className="mt-4 text-4xl font-semibold">Privacy Policy · Draft</h1><p className="my-8 text-lg text-muted-foreground">Draft placeholder pending legal review; not a finalized privacy policy.</p><section className="border-t border-border py-8"><h2 className="text-xl font-semibold">Draft — not legally reviewed</h2><p className="mt-3 leading-relaxed text-muted-foreground">This placeholder is not a complete privacy policy. The responsible legal entity, contact details, jurisdiction, retention periods and request-handling process still need to be confirmed.</p></section><section className="border-t border-border py-8"><h2 className="text-xl font-semibold">Information used by this prototype</h2><p className="mt-3 leading-relaxed text-muted-foreground">The account service handles sign-in information. PEAKFIVE stores profile display names, acknowledgement timestamps, private scenario inputs and account-deletion requests. Passwords are never stored as plaintext in application tables.</p></section><section className="border-t border-border py-8"><h2 className="text-xl font-semibold">Service boundaries</h2><p className="mt-3 leading-relaxed text-muted-foreground">The public optimizer processes simulated engineering inputs. Climatiq processes validated electricity-consumption inputs for emissions estimates. Do not enter confidential operational data in the public demonstration.</p></section><section className="border-t border-border py-8"><h2 className="text-xl font-semibold">Retention and rights</h2><p className="mt-3 leading-relaxed text-muted-foreground">Retention schedules and the account-deletion handling process await legal and operational review. A deletion request is not immediate account deletion.</p></section><Link to="/demo" className="text-primary">Explore the live demonstration →</Link></div></div>;}
+export const Route = createFileRoute("/privacy")({
+  head: () =>
+    seo(
+      "Privacy Policy · Draft",
+      "Draft placeholder pending legal review; not a finalized privacy policy.",
+    ),
+  component: Page,
+});
+function Page() {
+  return (
+    <div className="site-band">
+      <div className="mx-auto max-w-4xl">
+        <p className="text-xs uppercase tracking-widest text-primary">PEAKFIVE</p>
+        <h1 className="mt-4 text-4xl font-semibold">Privacy Policy · Draft</h1>
+        <p className="my-8 text-lg text-muted-foreground">
+          Draft placeholder pending legal review; not a finalized privacy policy.
+        </p>
+        <section className="border-t border-border py-8">
+          <h2 className="text-xl font-semibold">Draft — not legally reviewed</h2>
+          <p className="mt-3 leading-relaxed text-muted-foreground">
+            This placeholder is not a complete privacy policy. The responsible legal entity, contact
+            details, jurisdiction, retention periods and request-handling process still need to be
+            confirmed.
+          </p>
+        </section>
+        <section className="border-t border-border py-8">
+          <h2 className="text-xl font-semibold">Information used by this prototype</h2>
+          <p className="mt-3 leading-relaxed text-muted-foreground">
+            The account service handles sign-in information. PEAKFIVE stores profile display names,
+            acknowledgement timestamps, private scenario inputs and account-deletion requests.
+            Passwords are never stored as plaintext in application tables.
+          </p>
+        </section>
+        <section className="border-t border-border py-8">
+          <h2 className="text-xl font-semibold">Service boundaries</h2>
+          <p className="mt-3 leading-relaxed text-muted-foreground">
+            The public optimizer processes simulated engineering inputs. Climatiq processes
+            validated electricity-consumption inputs for emissions estimates. Do not enter
+            confidential operational data in the public demonstration.
+          </p>
+        </section>
+        <section className="border-t border-border py-8">
+          <h2 className="text-xl font-semibold">Retention and rights</h2>
+          <p className="mt-3 leading-relaxed text-muted-foreground">
+            Retention schedules and the account-deletion handling process await legal and
+            operational review. A deletion request is not immediate account deletion.
+          </p>
+        </section>
+        <Link to="/demo" className="text-primary">
+          Explore the live demonstration →
+        </Link>
+      </div>
+    </div>
+  );
+}

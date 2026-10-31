@@ -3,11 +3,98 @@ import { useState, type ReactNode } from "react";
 import { Menu, X, Waves, ArrowUpRight } from "lucide-react";
 import { Btn } from "@/components/pf/ui";
 import { useAuth } from "@/lib/auth-store";
-export function Brand() { return <Link to="/" className="flex items-center gap-2 font-display text-xl font-bold"><Waves className="text-primary" />PEAK<span className="text-primary">FIVE</span></Link>; }
+export function Brand() {
+  return (
+    <Link to="/" className="flex items-center gap-2 font-display text-xl font-bold">
+      <Waves className="text-primary" />
+      PEAK<span className="text-primary">FIVE</span>
+    </Link>
+  );
+}
 export function PublicShell({ children }: { children: ReactNode }) {
-  const [open, setOpen] = useState(false); const auth = useAuth(); const navigate = useNavigate();
-  return <div className="min-h-screen"><header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur"><div className="mx-auto flex max-w-7xl items-center justify-between gap-5 px-5 py-5"><Brand /><Btn size="icon" className="lg:hidden" aria-label={open ? "Close navigation" : "Open navigation"} aria-expanded={open} onClick={() => setOpen(!open)}>{open ? <X /> : <Menu />}</Btn><nav aria-label="Public navigation" className={`${open ? "flex" : "hidden"} absolute left-0 right-0 top-full flex-col gap-5 border-b border-border bg-background p-6 lg:static lg:flex lg:flex-row lg:items-center lg:border-0 lg:p-0`}>
-    {[["/", "Home"], ["/how-it-works", "How It Works"], ["/technology", "Technology"], ["/hamilton", "Hamilton Case Study"], ["/about", "About"]].map(([to,label]) => <Link key={to} to={to} onClick={() => setOpen(false)} className="text-sm text-muted-foreground hover:text-primary">{label}</Link>)}
-    <Btn onClick={() => { setOpen(false); void navigate({ to: auth.user ? "/dashboard" : "/login" }); }}>{auth.user ? "My Workspace" : "Log In"}</Btn><Btn variant="primary" onClick={() => { setOpen(false); void navigate({ to: "/signup" }); }}>Get Started <ArrowUpRight className="h-4 w-4" /></Btn>
-  </nav></div></header><main>{children}</main><footer className="border-t border-border py-12"><div className="mx-auto flex max-w-7xl flex-wrap justify-between gap-8 px-5"><div><Brand /><p className="mt-4 text-sm text-muted-foreground">Engineering decisions. Water-service requirements.</p><p className="mt-6 text-xs text-muted-foreground">© 2026 PEAKFIVE</p></div><nav className="flex max-w-lg flex-wrap gap-x-8 gap-y-4 text-sm text-muted-foreground">{[["/about","About"],["/technology","Technology"],["/methodology","Documentation"],["/contact","Contact"],["/privacy","Privacy Policy"],["/terms","Terms of Service"]].map(([to,label]) => <Link key={to} to={to}>{label}</Link>)}</nav></div></footer></div>;
+  const [open, setOpen] = useState(false);
+  const auth = useAuth();
+  const navigate = useNavigate();
+  return (
+    <div className="min-h-screen">
+      <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-5 px-5 py-5">
+          <Brand />
+          <Btn
+            size="icon"
+            className="lg:hidden"
+            aria-label={open ? "Close navigation" : "Open navigation"}
+            aria-expanded={open}
+            onClick={() => setOpen(!open)}
+          >
+            {open ? <X /> : <Menu />}
+          </Btn>
+          <nav
+            aria-label="Public navigation"
+            className={`${open ? "flex" : "hidden"} absolute left-0 right-0 top-full flex-col gap-5 border-b border-border bg-background p-6 lg:static lg:flex lg:flex-row lg:items-center lg:border-0 lg:p-0`}
+          >
+            {[
+              ["/", "Home"],
+              ["/how-it-works", "How It Works"],
+              ["/technology", "Technology"],
+              ["/hamilton", "Hamilton Case Study"],
+              ["/about", "About"],
+            ].map(([to, label]) => (
+              <Link
+                key={to}
+                to={to}
+                onClick={() => setOpen(false)}
+                className="text-sm text-muted-foreground hover:text-primary"
+              >
+                {label}
+              </Link>
+            ))}
+            <Btn
+              onClick={() => {
+                setOpen(false);
+                void navigate({ to: auth.user ? "/dashboard" : "/login" });
+              }}
+            >
+              {auth.user ? "My Workspace" : "Log In"}
+            </Btn>
+            <Btn
+              variant="primary"
+              onClick={() => {
+                setOpen(false);
+                void navigate({ to: "/signup" });
+              }}
+            >
+              Get Started <ArrowUpRight className="h-4 w-4" />
+            </Btn>
+          </nav>
+        </div>
+      </header>
+      <main>{children}</main>
+      <footer className="border-t border-border py-12">
+        <div className="mx-auto flex max-w-7xl flex-wrap justify-between gap-8 px-5">
+          <div>
+            <Brand />
+            <p className="mt-4 text-sm text-muted-foreground">
+              Engineering decisions. Water-service requirements.
+            </p>
+            <p className="mt-6 text-xs text-muted-foreground">© 2026 PEAKFIVE</p>
+          </div>
+          <nav className="flex max-w-lg flex-wrap gap-x-8 gap-y-4 text-sm text-muted-foreground">
+            {[
+              ["/about", "About"],
+              ["/technology", "Technology"],
+              ["/methodology", "Documentation"],
+              ["/contact", "Contact"],
+              ["/privacy", "Privacy Policy"],
+              ["/terms", "Terms of Service"],
+            ].map(([to, label]) => (
+              <Link key={to} to={to}>
+                {label}
+              </Link>
+            ))}
+          </nav>
+        </div>
+      </footer>
+    </div>
+  );
 }

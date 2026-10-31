@@ -549,7 +549,10 @@ export function SimProvider({
       setDate(request.date);
       setSystemState(request.system);
       setEventsState(request.events);
-      setPeakWindow({ peakStart: request.peak_window.start_slot / 4, peakEnd: request.peak_window.end_slot / 4 });
+      setPeakWindow({
+        peakStart: request.peak_window.start_slot / 4,
+        peakEnd: request.peak_window.end_slot / 4,
+      });
       resetOpt();
     },
     backendResult,

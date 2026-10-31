@@ -64,8 +64,19 @@ export function AppShell({ children }: { children: ReactNode }) {
           </button>
         </div>
         <nav className="space-y-1">
-          <Link to="/" className="block px-3 py-2 text-sm text-muted-foreground">← Public website</Link>
-          {auth.user && <><Link to="/dashboard" className="block px-3 py-2 text-sm text-primary">My Dashboard</Link><Link to="/scenarios" className="block px-3 py-2 text-sm text-muted-foreground">My Scenarios</Link></>}
+          <Link to="/" className="block px-3 py-2 text-sm text-muted-foreground">
+            ← Public website
+          </Link>
+          {auth.user && (
+            <>
+              <Link to="/dashboard" className="block px-3 py-2 text-sm text-primary">
+                My Dashboard
+              </Link>
+              <Link to="/scenarios" className="block px-3 py-2 text-sm text-muted-foreground">
+                My Scenarios
+              </Link>
+            </>
+          )}
           {NAV.map((n) => {
             const on = path === n.to;
             return (

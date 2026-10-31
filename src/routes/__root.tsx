@@ -132,7 +132,9 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider><SiteContent /></AuthProvider>
+      <AuthProvider>
+        <SiteContent />
+      </AuthProvider>
     </QueryClientProvider>
   );
 }
@@ -140,7 +142,34 @@ function RootComponent() {
 function SiteContent() {
   const path = useRouterState({ select: (s) => s.location.pathname });
   const auth = useAuth();
-  const engineering = ["/demo", "/dashboard", "/scenarios", "/settings", "/simulator", "/grid", "/twin", "/optimizer", "/carbon", "/financial", "/hamilton", "/business", "/methodology"].includes(path);
-  if (!engineering) return <PublicShell><Outlet /></PublicShell>;
-  return <SimProvider key={auth.identity}><CarbonProvider><AppShell><Outlet /></AppShell></CarbonProvider></SimProvider>;
+  const engineering = [
+    "/demo",
+    "/dashboard",
+    "/scenarios",
+    "/settings",
+    "/simulator",
+    "/grid",
+    "/twin",
+    "/optimizer",
+    "/carbon",
+    "/financial",
+    "/hamilton",
+    "/business",
+    "/methodology",
+  ].includes(path);
+  if (!engineering)
+    return (
+      <PublicShell>
+        <Outlet />
+      </PublicShell>
+    );
+  return (
+    <SimProvider key={auth.identity}>
+      <CarbonProvider>
+        <AppShell>
+          <Outlet />
+        </AppShell>
+      </CarbonProvider>
+    </SimProvider>
+  );
 }
