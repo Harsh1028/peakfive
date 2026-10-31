@@ -4,7 +4,8 @@ export const HAMILTON_REPORT = {
   facility: "Woodward Treatment Plant · Hamilton, Woodward Subsystem",
   systemId: "220003118",
   reportingYear: 2025,
-  publicationYear: 2026,
+  hostingYear: 2026,
+  publicationDate: null,
   table: "Table 2-3 · printed page 12",
 };
 

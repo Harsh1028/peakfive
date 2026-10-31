@@ -13,5 +13,5 @@ describe("Published Hamilton 2025 production", () => {
   });
   it("derives annual production only from monthly totals", () => { expect(productionSummary().annualMl).toBe(83564); });
   it("identifies the reported maximum without inventing a day", () => { expect(productionSummary().highestDaily.month).toBe("August"); expect(productionSummary().highestDaily.maximumDailyMl).toBe(415); });
-  it("documents reporting 2025 and publication 2026", () => { expect(HAMILTON_REPORT.reportingYear).toBe(2025); expect(HAMILTON_REPORT.publicationYear).toBe(2026); });
+  it("documents reporting 2025 without inventing a publication date", () => { expect(HAMILTON_REPORT.reportingYear).toBe(2025); expect(HAMILTON_REPORT.hostingYear).toBe(2026); expect(HAMILTON_REPORT.publicationDate).toBeNull(); });
 });
