@@ -1,0 +1,193 @@
+import { useRef, useState } from "react";
+import { AlertTriangle, CheckCircle2, ChevronLeft, ChevronRight, Database, Gauge, Loader2, Pause, Play, RotateCcw, Upload, XCircle, Zap, Droplets, Activity, ShieldCheck } from "lucide-react";
+import { CAPACITY, DEMAND, explainDifferences, PUMPS, stepLabel, type Combo, type Validation } from "@/lib/engine";
+import { useSim } from "@/lib/sim-store";
+import { cn } from "@/lib/utils";
+import { Btn, Panel, Tag } from "./ui";
+
+export function IllustrativeBanner() {
+  const { dataset } = useSim();
+  if (dataset.source !== "ILLUSTRATIVE") return null;
+  return (
+    <div className="mb-4 flex items-center gap-2 rounded-lg border border-warning/40 bg-warning/10 px-4 py-2.5 text-sm text-warning">
+      <AlertTriangle className="h-4 w-4 shrink-0" />
+      Illustrative grid profile. Import official IESO data for historical analysis.
+    </div>
+  );
+}
+
+export function SourceBadge() {
+  const { dataset } = useSim();
+  if (dataset.source === "IESO") return <Tag tone="ok"><CheckCircle2 className="h-3 w-3" />Verified IESO Historical Data</Tag>;
+  if (dataset.source === "UPLOAD") return <Tag tone="ok"><CheckCircle2 className="h-3 w-3" />Validated IESO CSV upload</Tag>;
+  return <Tag tone="warn"><AlertTriangle className="h-3 w-3" />Illustrative data</Tag>;
+}
+
+export function KpiCards() {
+  const { dataset, active, step, baseline, opt, status, config } = useSim();
+  const hourMw = dataset.hourly[Math.floor(step / 4)];
+  const level = active.eval.levels[step];
+  const served = DEMAND.slice(0, step + 1).reduce((a, b) => a + b, 0);
+  const total = DEMAND.reduce((a, b) => a + b, 0);
+  const violations = active.validation.checks.filter((c) => !c.pass).length;
+  const o = opt?.feasible ? opt.plan : undefined;
+  const reduction = o && baseline.validation.pass ? baseline.eval.peakKwh - o.eval.peakKwh : null;
+  const statusTone = status === "Optimized" ? "text-success" : status === "Infeasible" ? "text-destructive" : status === "Baseline" ? "text-primary" : "text-warning";
+  const cards = [
+    { icon: Zap, label: "Ontario Demand", value: `${hourMw.toLocaleString()}`, unit: "MW", sub: `Hour ending ${Math.floor(step / 4) + 1} · ${dataset.source === "ILLUSTRATIVE" ? "illustrative" : "IESO"}` },
+    { icon: Gauge, label: "Pump Demand", value: `${active.eval.kw[step]}`, unit: "kW", sub: `${active === baseline ? "Baseline" : "Optimized"} schedule · ${stepLabel(step)}` },
+    { icon: Droplets, label: "Reservoir Level", value: `${level}`, unit: "m³", sub: `${Math.round((level / CAPACITY) * 100)}% of ${CAPACITY} m³` },
+    { icon: Activity, label: "Peak-Window Reduction", value: reduction === null ? "—" : reduction.toFixed(1), unit: reduction === null ? "" : "kWh", sub: reduction === null ? (baseline.validation.pass ? "Run the optimizer" : "Baseline infeasible: no claim") : `${String(config.peakStart).padStart(2, "0")}:00–${String(config.peakEnd).padStart(2, "0")}:00 vs baseline` },
+    { icon: Droplets, label: "Water Requirements", value: `${served}`, unit: `/ ${total} m³`, sub: `${total - served} m³ remaining · ${violations} violation${violations === 1 ? "" : "s"}` },
+    { icon: ShieldCheck, label: "Optimization Status", value: status, unit: "", sub: opt ? `Last run ${new Date(opt.ranAt).toLocaleTimeString()}` : "No optimization run yet", tone: statusTone },
+  ];
+  return (
+    <div className="grid grid-cols-2 gap-3 lg:grid-cols-3 xl:grid-cols-6">
+      {cards.map((c) => (
+        <div key={c.label} className="panel p-4">
+          <div className="flex items-center gap-2 text-[11px] uppercase tracking-wider text-muted-foreground"><c.icon className="h-3.5 w-3.5 text-primary" />{c.label}</div>
+          <div className={cn("num mt-2 text-xl font-semibold", c.tone)}>{c.value} <span className="text-xs font-normal text-muted-foreground">{c.unit}</span></div>
+          <div className="mt-1 text-[11px] text-muted-foreground">{c.sub}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export function Playback() {
+  const { step, setStep, playing, setPlaying, speed, setSpeed, view, setView, opt } = useSim();
+  return (
+    <div className="panel flex flex-wrap items-center gap-3 p-3">
+      <div className="flex gap-1">
+        <Btn size="icon" aria-label="Restart" onClick={() => { setPlaying(false); setStep(0); }}><RotateCcw className="h-4 w-4" /></Btn>
+        <Btn size="icon" aria-label="Step backward" onClick={() => setStep(step - 1)}><ChevronLeft className="h-4 w-4" /></Btn>
+        <Btn size="icon" variant="primary" aria-label={playing ? "Pause" : "Play"} onClick={() => { if (step >= 95) setStep(0); setPlaying(!playing); }}>
+          {playing ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+        </Btn>
+        <Btn size="icon" aria-label="Step forward" onClick={() => setStep(step + 1)}><ChevronRight className="h-4 w-4" /></Btn>
+      </div>
+      <span className="num w-12 text-sm font-semibold text-primary">{stepLabel(step)}</span>
+      <input type="range" min={0} max={95} value={step} onChange={(e) => setStep(Number(e.target.value))} className="min-w-40 flex-1" aria-label="Simulation time" />
+      <div className="flex gap-1">
+        {[1, 4, 12, 24].map((s) => <Btn key={s} size="sm" variant={speed === s ? "active" : "ghost"} onClick={() => setSpeed(s)}>{s}×</Btn>)}
+      </div>
+      <div className="flex gap-1">
+        <Btn size="sm" variant={view === "baseline" ? "active" : "ghost"} onClick={() => setView("baseline")}>Baseline</Btn>
+        <Btn size="sm" variant={view === "optimized" ? "active" : "ghost"} disabled={!opt?.feasible} onClick={() => setView("optimized")}>Optimized</Btn>
+      </div>
+    </div>
+  );
+}
+
+export function DataControls() {
+  const { date, setDate, loadIeso, loading, dataError, uploadCsv, official, useOfficial, setUseOfficial } = useSim();
+  const fileRef = useRef<HTMLInputElement>(null);
+  return (
+    <div className="flex flex-wrap items-center gap-2">
+      <input type="date" className="field num" value={date} min="2024-01-01" max={new Date().toISOString().slice(0, 10)} onChange={(e) => setDate(e.target.value)} aria-label="Historical date" />
+      <Btn size="sm" variant="primary" onClick={() => loadIeso()} disabled={loading}>
+        {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Database className="h-4 w-4" />}Load IESO data
+      </Btn>
+      <Btn size="sm" onClick={() => fileRef.current?.click()}><Upload className="h-4 w-4" />Upload IESO CSV</Btn>
+      <input ref={fileRef} type="file" accept=".csv,text/csv" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) void uploadCsv(f, date); e.target.value = ""; }} />
+      <div className="flex rounded-lg border border-border p-0.5">
+        <button className={cn("rounded-md px-2.5 py-1 text-xs", useOfficial && official ? "bg-primary/15 text-primary" : "text-muted-foreground")} disabled={!official} onClick={() => setUseOfficial(true)}>Official</button>
+        <button className={cn("rounded-md px-2.5 py-1 text-xs", !useOfficial || !official ? "bg-warning/15 text-warning" : "text-muted-foreground")} onClick={() => setUseOfficial(false)}>Illustrative</button>
+      </div>
+      {dataError && <span className="w-full text-xs text-destructive">{dataError}</span>}
+    </div>
+  );
+}
+
+export function ValidationPanel({ validation, title = "Independent constraint check" }: { validation: Validation; title?: string }) {
+  return (
+    <Panel title={title} right={validation.pass ? <Tag tone="ok">PASS</Tag> : <Tag tone="bad">FAIL</Tag>}>
+      <ul className="space-y-2 text-sm">
+        {validation.checks.map((c) => (
+          <li key={c.name} className="flex items-start gap-2">
+            {c.pass ? <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-success" /> : <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-destructive" />}
+            <div><div className="font-medium">{c.name}</div><div className="num text-xs text-muted-foreground">{c.detail}</div></div>
+          </li>
+        ))}
+      </ul>
+    </Panel>
+  );
+}
+
+export function InfeasiblePanel() {
+  const { opt, baseline } = useSim();
+  const msgs: string[] = [];
+  if (opt && !opt.feasible && opt.reason) msgs.push(opt.reason);
+  if (!baseline.validation.pass) msgs.push(`The rule-based baseline violates constraints (${baseline.validation.checks.filter((c) => !c.pass).map((c) => c.name).join(", ")}). No improvement is claimed against it.`);
+  if (!msgs.length) return null;
+  return (
+    <div className="rounded-xl border border-destructive/50 bg-destructive/10 p-4">
+      <div className="flex items-center gap-2 font-semibold text-destructive"><AlertTriangle className="h-4 w-4" />No valid schedule</div>
+      {msgs.map((m) => <p key={m} className="mt-1.5 text-sm text-foreground/90">{m}</p>)}
+    </div>
+  );
+}
+
+export function Explanation() {
+  const { baseline, opt, config } = useSim();
+  if (!opt?.feasible || !opt.plan) return <p className="text-sm text-muted-foreground">Run the optimizer to see which pumping periods move and why.</p>;
+  return (
+    <ul className="space-y-2 text-sm">
+      {explainDifferences(baseline.eval, opt.plan.eval, config).map((l) => <li key={l} className="flex gap-2"><span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />{l}</li>)}
+    </ul>
+  );
+}
+
+export function Gantt({ combos, levels, label }: { combos: Combo[]; levels: number[]; label: string }) {
+  const { config, step, setStep } = useSim();
+  const rows = [
+    ...PUMPS.map((p, i) => ({ name: p.name.replace("High-Lift ", ""), cell: (t: number) => <div className={cn("h-full w-full", combos[t] & (1 << i) ? "bg-success" : "bg-idle/40")} /> })),
+    { name: "Reservoir", cell: (t: number) => <div className="flex h-full w-full items-end"><div className="w-full bg-water" style={{ height: `${(levels[t + 1] / CAPACITY) * 100}%` }} /></div> },
+    { name: "Demand", cell: (t: number) => <div className="flex h-full w-full items-end"><div className="w-full bg-warning/70" style={{ height: `${(DEMAND[t] / 16) * 100}%` }} /></div> },
+  ];
+  return (
+    <div>
+      <div className="mb-2 text-xs font-medium text-muted-foreground">{label}</div>
+      <div className="space-y-1">
+        {rows.map((r) => (
+          <div key={r.name} className="flex items-center gap-2">
+            <div className="w-20 shrink-0 text-[11px] text-muted-foreground">{r.name}</div>
+            <div className="relative flex h-6 flex-1 overflow-hidden rounded">
+              {Array.from({ length: 96 }, (_, t) => (
+                <button key={t} type="button" aria-label={stepLabel(t)} onClick={() => setStep(t)}
+                  className={cn("relative h-full flex-1 border-r border-background/40", t >= config.peakStart * 4 && t < config.peakEnd * 4 && "ring-1 ring-inset ring-destructive/60", t === step && "outline outline-2 outline-foreground z-10")}>
+                  {r.cell(t)}
+                </button>
+              ))}
+            </div>
+          </div>
+        ))}
+        <div className="flex gap-2"><div className="w-20" /><div className="num flex flex-1 justify-between text-[10px] text-muted-foreground">{[0, 4, 8, 12, 16, 20, 24].map((h) => <span key={h}>{String(h).padStart(2, "0")}:00</span>)}</div></div>
+      </div>
+    </div>
+  );
+}
+
+export function OptimizeButton({ size = "lg", label = "Optimize Schedule" }: { size?: "md" | "lg"; label?: string }) {
+  const { runOptimize, optimizing } = useSim();
+  const [, force] = useState(0);
+  return (
+    <Btn variant="primary" size={size} disabled={optimizing} onClick={async () => { await runOptimize(); force((n) => n + 1); }}>
+      {optimizing ? <><Loader2 className="h-4 w-4 animate-spin" />Optimizing 96 intervals…</> : <><Zap className="h-4 w-4" />{label}</>}
+    </Btn>
+  );
+}
+
+export function IciPanel() {
+  return (
+    <Panel title="Historical ICI peak context" sub="Separately sourced metric — not part of the hourly series above">
+      <div className="num text-2xl font-semibold text-warning">25,646 MW</div>
+      <div className="mt-1 text-sm">July 14, 2026 · hour ending 17</div>
+      <dl className="mt-3 space-y-1 text-xs text-muted-foreground">
+        <div><span className="text-foreground">Metric:</span> ICI Ontario Demand (Peak Tracker)</div>
+        <div><span className="text-foreground">Source:</span> <a className="text-primary underline" href="https://www.ieso.ca/peaktracker/" target="_blank" rel="noreferrer">IESO Peak Tracker</a></div>
+      </dl>
+      <p className="mt-3 text-xs text-muted-foreground">ICI Ontario Demand differs from the hourly “Ontario Demand” column, so this value is never inserted into the chart data.</p>
+    </Panel>
+  );
+}
