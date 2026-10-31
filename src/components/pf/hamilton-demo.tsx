@@ -4,7 +4,7 @@ import { useSim } from "@/lib/sim-store";
 import { BackendScenarios } from "./backend-controls";
 import { EnvironmentalSummary, CarbonPresentation } from "./carbon";
 import { HamiltonWaterDashboard } from "./hamilton-water-data";
-import { DemandChart, StorageChart } from "./charts";
+import { StorageChart } from "./charts";
 import { HamiltonFacts, HamiltonSystem, HamiltonTransparency, HamiltonStrategy } from "./hamilton";
 import { Gantt, InfeasiblePanel, OptimizeButton, Playback, ValidationPanel } from "./panels";
 import { Btn, Panel, Tag } from "./ui";
@@ -79,7 +79,7 @@ export function HamiltonDemo({ onClose }: { onClose: () => void }) {
         </header>
         <nav
           aria-label="Demonstration stages"
-          className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-5"
+          className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-6"
         >
           {STAGES.map((name, i) => (
             <Btn

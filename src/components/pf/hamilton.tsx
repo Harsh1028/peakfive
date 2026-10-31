@@ -28,7 +28,7 @@ export function HamiltonFacts() {
           Hamilton's Water Infrastructure
         </h2>
         <p className="mt-1 text-xs text-muted-foreground">
-          Woodward distribution-system context · 2025 annual report, section 2.2.1, printed page 7.
+          Woodward distribution-system context · 2025 annual report, section 2.2.1, printed page 8.
         </p>
       </div>
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
@@ -67,8 +67,8 @@ export function HamiltonFacts() {
         ))}
       </div>
       <div className="flex flex-wrap gap-x-5 gap-y-2 text-xs">
-        <a href={`${HAMILTON_REPORT.url}#page=7`} target="_blank" rel="noreferrer" className="text-primary underline">
-          City of Hamilton · 2025 annual report · printed page 7 ↗
+        <a href={`${HAMILTON_REPORT.url}#page=8`} target="_blank" rel="noreferrer" className="text-primary underline">
+          City of Hamilton · 2025 annual report · printed page 8 ↗
         </a>
         <a href={WATER_URL} target="_blank" rel="noreferrer" className="text-primary underline">
           City of Hamilton · Drinking-water system ↗
