@@ -1,10 +1,10 @@
 # PEAKFIVE backend integration
 
 ## Deployed baseline comparison
-- [ ] Inspect deployed /openapi.json and real /compare responses; explain the integration plan before code changes.
-- [ ] Add exact documented comparison requests, response validation and cold-start loading/timeout handling.
-- [ ] Connect simulated baseline/optimized schedules and API peak metrics to existing dashboards, playback and charts without altering Climatiq or inventing savings.
-- [ ] Test response statuses, missing/invalid data, stale scenario results and live browser comparison flow.
+- [x] Inspect deployed /openapi.json and real /compare responses; explain and obtain approval for the integration plan before code changes.
+- [x] Add exact documented comparison requests, response validation and 180-second cold-start loading/timeout handling.
+- [x] Connect simulated baseline/optimized schedules and API peak metrics to existing dashboards, playback and charts without altering Climatiq or inventing savings.
+- [x] Test response statuses, missing/invalid data, stale scenario results and live browser comparison flow; 108 tests passed, live Render comparison and unavailable scenario passed, playback and verified Climatiq response confirmed.
 
 ## Verified Hamilton water data
 - [x] Verify all 36 Table 2-3 production values and Woodward infrastructure (section 2.2.1, page 8) against the official 2025 report; disclose capacity-label differences and unstated publication date.
@@ -26,7 +26,7 @@
 - [x] Configure the production API address while preserving the existing design.
 - [x] Test real schedule playback, charts, pump animations, fire/outage scenarios and clear failure states (54 regression tests passed).
 - [x] Local Render CORS now permits http://localhost:8080; complete Hamilton UI flow passed with normal browser security.
-- [x] Implement typed health/optimization client with a 45-second timeout.
+- [x] Implement typed health/optimization client (timeout extended to 180 seconds for Render cold starts).
 - [x] Adapt shared schedule state and visualizations to actual results and backend statuses.
 - [x] Add the specified system defaults and fire/pump-outage controls.
 - [x] Separate demo schedules and suppress unsupported baseline savings claims.

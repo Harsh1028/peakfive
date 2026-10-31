@@ -13,6 +13,7 @@ import {
 import { PageHeader, Panel } from "@/components/pf/ui";
 import { cn } from "@/lib/utils";
 import { HamiltonStrategy } from "@/components/pf/hamilton";
+import { CompareButton, ComparisonDashboard } from "@/components/pf/comparison";
 
 export const Route = createFileRoute("/optimizer")({
   head: () =>
@@ -24,7 +25,18 @@ export const Route = createFileRoute("/optimizer")({
 });
 
 function Optimizer() {
-  const { baseline, opt, view, setView, config, mode, backendResult } = useSim();
+  const {
+    baseline,
+    opt,
+    view,
+    setView,
+    config,
+    mode,
+    backendResult,
+    comparisonBaseline,
+    activeSchedule,
+    active,
+  } = useSim();
   const o = opt?.feasible ? opt.plan : undefined;
   if (mode === "backend")
     return (
@@ -32,14 +44,20 @@ function Optimizer() {
         <PageHeader
           title="Schedule Optimizer"
           sub="Actual FastAPI scheduling results · illustrative water system"
-          right={<OptimizeButton />}
+          right={
+            <div className="flex flex-wrap gap-2">
+              <OptimizeButton />
+              <CompareButton />
+            </div>
+          }
         />
         <HamiltonStrategy />
         <InfeasiblePanel />
         <Playback />
+        <ComparisonDashboard timelines />
         <Panel
           title="Peak-window demand"
-          sub="Highest total site load inside the selected window; no independent baseline is available."
+          sub="Optimized maximum site load inside the selected window · simulated, not measured."
         >
           <div className="num text-3xl text-primary">
             {backendResult?.coincident_kw_after?.toFixed(1) ?? "—"}{" "}
@@ -53,13 +71,20 @@ function Optimizer() {
                 : "Awaiting backend schedule"}
           </p>
         </Panel>
-        <Panel title="Pump timelines">
-          {o ? (
-            <Gantt combos={o.combos} levels={o.eval.levels} label="BACKEND SCHEDULE" />
-          ) : (
-            <p className="text-sm text-muted-foreground">No backend schedule available.</p>
-          )}
-        </Panel>
+        {!comparisonBaseline && (
+          <Panel title="Pump timelines">
+            {o ? (
+              <Gantt
+                combos={active.combos}
+                levels={active.eval.levels}
+                label="SIMULATED BACKEND SCHEDULE"
+                schedule={activeSchedule ?? undefined}
+              />
+            ) : (
+              <p className="text-sm text-muted-foreground">No backend schedule available.</p>
+            )}
+          </Panel>
+        )}
         <div className="grid gap-5 lg:grid-cols-2">
           <Panel title="Facility power-demand profile">
             <LoadChart />

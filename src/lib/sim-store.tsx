@@ -26,6 +26,8 @@ import { fetchIesoDay } from "./ieso.functions";
 import { extractDay } from "./ieso";
 import {
   checkHealth,
+  compareRemote,
+  comparisonToPlans,
   configuredApiUrl,
   DEFAULT_SYSTEM,
   demandWithEvents,
@@ -34,6 +36,7 @@ import {
   type System,
   type OptimizeResponse,
   type PeakfiveEvent,
+  type CompareResponse,
 } from "./peakfive-api";
 
 export type DataSource = "IESO" | "UPLOAD" | "ILLUSTRATIVE";
@@ -83,6 +86,11 @@ interface Store {
   events: PeakfiveEvent[];
   setEvents: (events: PeakfiveEvent[]) => void;
   backendResult: OptimizeResponse | null;
+  comparison: CompareResponse | null;
+  comparisonBaseline: Plan | null;
+  comparing: boolean;
+  runCompare: () => Promise<void>;
+  activeSchedule: OptimizeResponse["schedule"] | null;
   demand: number[];
   capacity: number;
   pumps: { id: string; name: string; flow: number; kw: number; available: boolean }[];
@@ -138,6 +146,9 @@ export function SimProvider({
   const [system, setSystemState] = useState<System>(DEFAULT_SYSTEM);
   const [events, setEventsState] = useState<PeakfiveEvent[]>([]);
   const [backendResult, setBackendResult] = useState<OptimizeResponse | null>(null);
+  const [comparison, setComparison] = useState<CompareResponse | null>(null);
+  const [comparisonBaseline, setComparisonBaseline] = useState<Plan | null>(null);
+  const [comparing, setComparing] = useState(false);
   const busy = useRef(false);
   const revision = useRef(0);
   const [date, setDate] = useState("2026-07-14");
@@ -169,7 +180,8 @@ export function SimProvider({
 
   const dataset = useOfficial && official ? official : { ...ILLUSTRATIVE, date };
   const hourly = dataset.hourly;
-  const baseline = useMemo(() => makeBaseline(demoConfig, hourly), [demoConfig, hourly]);
+  const demoBaseline = useMemo(() => makeBaseline(demoConfig, hourly), [demoConfig, hourly]);
+  const baseline = mode === "backend" && comparisonBaseline ? comparisonBaseline : demoBaseline;
 
   // persist settings locally
   useEffect(() => {
@@ -197,6 +209,8 @@ export function SimProvider({
     revision.current++;
     setOpt(null);
     setBackendResult(null);
+    setComparison(null);
+    setComparisonBaseline(null);
     setView("baseline");
     setPlaying(false);
   };
@@ -385,6 +399,61 @@ export function SimProvider({
     [draft, hourly, mode, system, peakWindow, date, events, apiUrl],
   );
 
+  const runCompare = async () => {
+    if (mode !== "backend" || busy.current) return;
+    busy.current = true;
+    resetOpt();
+    const ticket = revision.current;
+    const request = {
+      date,
+      system,
+      events,
+      peak_window: { start_slot: peakWindow.peakStart * 4, end_slot: peakWindow.peakEnd * 4 },
+    };
+    setComparing(true);
+    setOptimizing(true);
+    setConnection("Optimizing");
+    setConnectionError(null);
+    try {
+      const result = await compareRemote(apiUrl, request);
+      const plans = comparisonToPlans(result, request);
+      if (ticket === revision.current) {
+        setComparison(result);
+        if (plans) {
+          setComparisonBaseline(plans.baseline);
+          setBackendResult(plans.optimizedResult);
+          setOpt({
+            feasible: true,
+            plan: plans.optimized,
+            reason: result.explanation,
+            ranAt: Date.now(),
+          });
+          setView("optimized");
+        }
+      }
+      setConnection("Connected");
+    } catch (e) {
+      const reason = e instanceof Error ? e.message : "Comparison request failed";
+      if (ticket === revision.current)
+        setComparison({
+          status: "error",
+          label: "Simulated comparison — not measured Hamilton data or financial savings.",
+          explanation: reason,
+          peak_window: null,
+          energy: null,
+          baseline: null,
+          optimized: null,
+          caveats: [],
+        });
+      setConnection("Disconnected");
+      setConnectionError(reason);
+    } finally {
+      busy.current = false;
+      setComparing(false);
+      setOptimizing(false);
+    }
+  };
+
   // dataset change invalidates any optimized plan
   const prevHourly = useRef(hourly);
   useEffect(() => {
@@ -442,9 +511,11 @@ export function SimProvider({
   };
   const active =
     mode === "backend"
-      ? opt?.feasible && opt.plan
-        ? opt.plan
-        : empty
+      ? view === "baseline" && comparisonBaseline
+        ? comparisonBaseline
+        : opt?.feasible && opt.plan
+          ? opt.plan
+          : empty
       : view === "optimized" && opt?.feasible && opt.plan
         ? opt.plan
         : baseline;
@@ -471,6 +542,16 @@ export function SimProvider({
     events,
     setEvents,
     backendResult,
+    comparison,
+    comparisonBaseline,
+    comparing,
+    runCompare,
+    activeSchedule:
+      mode === "backend"
+        ? view === "baseline" && comparisonBaseline
+          ? (comparison?.baseline?.schedule ?? null)
+          : (backendResult?.schedule ?? null)
+        : null,
     demand,
     capacity: mode === "backend" ? system.tank.capacity_m3 : 420,
     pumps:

@@ -18,6 +18,7 @@ import { Btn, Panel } from "@/components/pf/ui";
 import { PumpStation, Tank } from "@/components/pf/visuals";
 import { EnvironmentalSummary } from "@/components/pf/carbon";
 import { HamiltonViewModes } from "@/components/pf/hamilton-water-data";
+import { CompareButton, ComparisonDashboard } from "@/components/pf/comparison";
 
 export const Route = createFileRoute("/")({
   head: () =>
@@ -48,6 +49,7 @@ function Overview() {
             Start Demo
           </Btn>
           <OptimizeButton />
+          <CompareButton />
         </div>
       </div>
       <HamiltonOverview />
@@ -60,6 +62,7 @@ function Overview() {
       <BackendSettings />
       <InfeasiblePanel />
       <KpiCards />
+      <ComparisonDashboard timelines />
       <EnvironmentalSummary />
       <Playback />
       <div className="grid gap-5 xl:grid-cols-5">

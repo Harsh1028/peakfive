@@ -27,6 +27,7 @@ import {
   type Validation,
 } from "@/lib/engine";
 import { useSim } from "@/lib/sim-store";
+import type { OptimizeResponse } from "@/lib/peakfive-api";
 import { cn } from "@/lib/utils";
 import { Btn, Panel, Tag } from "./ui";
 
@@ -81,6 +82,8 @@ export function KpiCards() {
     capacity,
     hasSchedule,
     backendResult,
+    comparison,
+    view,
   } = useSim();
   const hourMw = dataset.hourly[Math.floor(step / 4)];
   const level = active.eval.levels[step];
@@ -110,7 +113,7 @@ export function KpiCards() {
       label: mode === "backend" ? "Facility Demand" : "Pump Demand",
       value: hasSchedule ? `${active.eval.kw[step].toFixed(1)}` : "—",
       unit: "kW",
-      sub: `${mode === "backend" ? (hasSchedule ? "Backend" : "Awaiting backend") : active === baseline ? "Baseline" : "Optimized"} · ${stepLabel(step)}`,
+      sub: `${mode === "backend" ? (hasSchedule ? `Simulated ${view}` : "Awaiting backend") : active === baseline ? "Baseline" : "Optimized"} · ${stepLabel(step)}`,
     },
     {
       icon: Droplets,
@@ -124,14 +127,17 @@ export function KpiCards() {
       label: mode === "backend" ? "Peak-Window Demand" : "Peak-Window Reduction",
       value:
         mode === "backend"
-          ? (backendResult?.coincident_kw_after?.toFixed(1) ?? "—")
+          ? ((view === "baseline"
+              ? comparison?.peak_window?.baseline_kw
+              : backendResult?.coincident_kw_after
+            )?.toFixed(1) ?? "—")
           : reduction === null
             ? "—"
             : reduction.toFixed(1),
       unit: mode === "backend" ? "kW" : reduction === null ? "" : "kWh",
       sub:
         mode === "backend"
-          ? "Maximum site load · no baseline savings claim"
+          ? `Simulated ${view} maximum site load · not financial savings`
           : reduction === null
             ? "Run the optimizer"
             : "vs demo baseline",
@@ -183,6 +189,7 @@ export function Playback() {
     opt,
     mode,
     hasSchedule,
+    comparisonBaseline,
   } = useSim();
   return (
     <div className="panel flex flex-wrap items-center gap-3 p-3">
@@ -240,13 +247,13 @@ export function Playback() {
         ))}
       </div>
       <div className="flex gap-1">
-        {mode === "demo" && (
+        {(mode === "demo" || comparisonBaseline) && (
           <Btn
             size="sm"
             variant={view === "baseline" ? "active" : "ghost"}
             onClick={() => setView("baseline")}
           >
-            Demo baseline
+            {mode === "backend" ? "Simulated baseline" : "Demo baseline"}
           </Btn>
         )}
         <Btn
@@ -255,7 +262,7 @@ export function Playback() {
           disabled={!opt?.feasible}
           onClick={() => setView("optimized")}
         >
-          {mode === "backend" ? "Backend schedule" : "Demo optimized"}
+          {mode === "backend" ? "Simulated optimized" : "Demo optimized"}
         </Btn>
       </div>
     </div>
@@ -433,12 +440,14 @@ export function Gantt({
   combos,
   levels,
   label,
+  schedule,
 }: {
   combos: Combo[];
   levels: number[];
   label: string;
+  schedule?: OptimizeResponse["schedule"];
 }) {
-  const { config, step, setStep, pumps, capacity, demand, mode, backendResult } = useSim();
+  const { config, step, setStep, pumps, capacity, demand, mode, activeSchedule } = useSim();
   const rows = [
     ...pumps.map((p, i) => ({
       name: p.name.replace("High-Lift ", ""),
@@ -448,7 +457,7 @@ export function Gantt({
             "h-full w-full",
             (
               mode === "backend"
-                ? backendResult?.schedule[t]?.pumps_on.includes(p.id)
+                ? (schedule ?? activeSchedule)?.[t]?.pumps_on.includes(p.id)
                 : combos[t] & (1 << i)
             )
               ? "bg-success"
