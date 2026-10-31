@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   DEFAULT_SYSTEM,
+  configuredApiUrl,
   REQUEST_TIMEOUT_MS,
   checkHealth,
   demandWithEvents,
@@ -47,9 +48,14 @@ function fixture(req = request()): OptimizeResponse {
 }
 afterEach(() => {
   vi.unstubAllGlobals();
+  vi.unstubAllEnvs();
   vi.useRealTimers();
 });
 describe("FastAPI contract", () => {
+  it("reads the production Render address from Vite configuration", () => {
+    vi.stubEnv("VITE_PEAKFIVE_API", "https://peakfive-api.onrender.com");
+    expect(configuredApiUrl()).toBe("https://peakfive-api.onrender.com");
+  });
   it("uses the exact pump defaults", () => {
     expect(DEFAULT_SYSTEM.pumps.map((p) => [p.id, p.kw, p.flow_m3h])).toEqual([
       ["P1", 80, 100],

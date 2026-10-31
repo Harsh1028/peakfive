@@ -2,9 +2,9 @@
 
 ## PEAKFIVE FastAPI connection
 
-Set `VITE_PEAKFIVE_API` to your teammate's API base URL in the frontend deployment configuration, then rebuild/redeploy the frontend. There is deliberately no localhost fallback. For local development, set it to your local FastAPI address in an uncommitted `.env.local`. The dashboard's **API base URL** control also accepts a session-only override for judging and connection checks.
+Vite configuration supplies `VITE_PEAKFIVE_API` as `https://peakfive-api.onrender.com` for the production service. There is deliberately no localhost fallback. The dashboard's **API base URL** control also accepts a session-only override for connection checks.
 
-The deployed dashboard requires an HTTPS backend. In the FastAPI deployment, set `PEAKFIVE_CORS_ORIGINS` to the exact frontend origins, including `https://id-preview--a5e4ede2-127c-4978-ba9a-1f1d2ba3fb34.lovable.app`, `http://localhost:8080` for local checks, and the eventual published frontend origin. This setting replaces backend defaults; wildcards are not supported. Restart FastAPI after changing it.
+The deployed dashboard requires an HTTPS backend. Render currently permits `https://peakfive.lovable.app`. To use the editor preview and local checks too, set Render's `PEAKFIVE_CORS_ORIGINS` to `https://peakfive.lovable.app,https://id-preview--a5e4ede2-127c-4978-ba9a-1f1d2ba3fb34.lovable.app,http://localhost:8080`. This setting replaces backend defaults; wildcards are not supported. Restart FastAPI after changing it.
 
 Only `GET /health` and `POST /optimize` are used. Optimization requests time out after 45 seconds; errors never substitute frontend demo results. Backend `tank_m3` is start-of-interval storage, with 24:00 calculated separately. Essential site load is included in facility kW. The API provides no baseline or tariff, so no backend savings are shown.
 
