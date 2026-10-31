@@ -33,8 +33,8 @@ describe("engine", () => {
   it("6. unavailable pumps never operate", () => {
     const c = { ...cfg, pump2: false };
     const r = optimize(c, H);
-    if (r.feasible) expect(r.combos!.every((x) => !(x & 2))).toBe(true);
-    expect(baselineSchedule(c).every((x) => !(x & 2))).toBe(true);
+    if (r.feasible) expect(r.combos!.every((x: number) => !(x & 2))).toBe(true);
+    expect(baselineSchedule(c).every((x: number) => !(x & 2))).toBe(true);
   });
   it("7. pump 1 failure is infeasible with a reason", () => {
     const r = optimize({ ...cfg, pump1: false }, H);

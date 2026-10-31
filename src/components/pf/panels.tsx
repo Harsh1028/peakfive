@@ -168,7 +168,7 @@ export function Gantt({ combos, levels, label }: { combos: Combo[]; levels: numb
   );
 }
 
-export function OptimizeButton({ size = "lg" as const, label = "Optimize Schedule" }) {
+export function OptimizeButton({ size = "lg", label = "Optimize Schedule" }: { size?: "md" | "lg"; label?: string }) {
   const { runOptimize, optimizing } = useSim();
   const [, force] = useState(0);
   return (
