@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as BusinessRouteImport } from './routes/business'
+import { Route as CarbonRouteImport } from './routes/carbon'
 import { Route as FinancialRouteImport } from './routes/financial'
 import { Route as GridRouteImport } from './routes/grid'
 import { Route as MethodologyRouteImport } from './routes/methodology'
@@ -26,6 +27,11 @@ const IndexRoute = IndexRouteImport.update({
 const BusinessRoute = BusinessRouteImport.update({
   id: '/business',
   path: '/business',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CarbonRoute = CarbonRouteImport.update({
+  id: '/carbon',
+  path: '/carbon',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FinancialRoute = FinancialRouteImport.update({
@@ -62,6 +68,7 @@ const TwinRoute = TwinRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/business': typeof BusinessRoute
+  '/carbon': typeof CarbonRoute
   '/financial': typeof FinancialRoute
   '/grid': typeof GridRoute
   '/methodology': typeof MethodologyRoute
@@ -72,6 +79,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/business': typeof BusinessRoute
+  '/carbon': typeof CarbonRoute
   '/financial': typeof FinancialRoute
   '/grid': typeof GridRoute
   '/methodology': typeof MethodologyRoute
@@ -83,6 +91,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/business': typeof BusinessRoute
+  '/carbon': typeof CarbonRoute
   '/financial': typeof FinancialRoute
   '/grid': typeof GridRoute
   '/methodology': typeof MethodologyRoute
@@ -95,6 +104,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/business'
+    | '/carbon'
     | '/financial'
     | '/grid'
     | '/methodology'
@@ -105,6 +115,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/business'
+    | '/carbon'
     | '/financial'
     | '/grid'
     | '/methodology'
@@ -115,6 +126,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/business'
+    | '/carbon'
     | '/financial'
     | '/grid'
     | '/methodology'
@@ -126,6 +138,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BusinessRoute: typeof BusinessRoute
+  CarbonRoute: typeof CarbonRoute
   FinancialRoute: typeof FinancialRoute
   GridRoute: typeof GridRoute
   MethodologyRoute: typeof MethodologyRoute
@@ -148,6 +161,13 @@ declare module '@tanstack/react-router' {
       path: '/business'
       fullPath: '/business'
       preLoaderRoute: typeof BusinessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/carbon': {
+      id: '/carbon'
+      path: '/carbon'
+      fullPath: '/carbon'
+      preLoaderRoute: typeof CarbonRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/financial': {
@@ -198,6 +218,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BusinessRoute: BusinessRoute,
+  CarbonRoute: CarbonRoute,
   FinancialRoute: FinancialRoute,
   GridRoute: GridRoute,
   MethodologyRoute: MethodologyRoute,
